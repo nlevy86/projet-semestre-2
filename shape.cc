@@ -1,6 +1,10 @@
 #include <iostream>
 #include <cmaths>
 #include "shape.h"
+#include "constantes.h"
+#include "message.h"
+
+constexpr double epsil_zero(0.5) ;
 
 using namespace std;
 
