@@ -17,4 +17,7 @@ void testlong(Id,longueur){
 }
 
 void testray(rayon){
-  if (rayon<r_sca or rayon>=r_sca_repro){
+  if (rayon<r_sca or rayon>=r_sca_repro){scavenger_radius_outside(rayon)};
+}
+
+
