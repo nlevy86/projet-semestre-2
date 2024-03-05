@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmaths>
 #include "shape.h"
-#include "constants.h"
 
 using namespace std;
 
