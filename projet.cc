@@ -1,3 +1,3 @@
 #include <iostream>
-#includ <cmath>
+#include <cmath>
 
