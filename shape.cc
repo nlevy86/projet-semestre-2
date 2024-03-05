@@ -14,13 +14,3 @@ void shape::setbase(abs,ord){
     S2d.y=ord;
   } else { lifeform_center_outside(abs, ord);}
 };
-
-void shape::setangle(rad){
-  if (rad<=M_PI and rad>=M_PI){
-    angle=rad;
-  }else{
-};
-
-void shape::setlongueur(taille){
-  longueur=taille;
-};
