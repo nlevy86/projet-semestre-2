@@ -1,11 +1,19 @@
 #include <iostream>
 #include <cmaths>
 #include "shape.h"
+#include "constants.h"
 
 using namespace std;
 
-void setS2d(ab,or){
+void shape::setS2d(ab,or){
   S2d.x=ab;
   S2d.y=or;
 };
 
+void shape::setangle(rad){
+  angle=rad;
+};
+
+void shape::setlongueur(taille){
+  longueur=taille;
+};
