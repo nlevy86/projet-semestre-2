@@ -11,5 +11,5 @@ public:
 private:
   S2d base;
   double angle;
-  iunsigned double longueur;                
+  unsigned double longueur;                
 };
