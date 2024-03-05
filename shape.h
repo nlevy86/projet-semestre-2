@@ -7,7 +7,9 @@ struct S2d {double x=0; doube y=0;};
 
 class Segment {
 public:
-  
+  void setbase (double ab, double or);
+  void setangle();
+  void setlongueur();
 private:
   S2d base;
   double angle;
