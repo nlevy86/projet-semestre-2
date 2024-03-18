@@ -25,8 +25,9 @@ bool superpo_commun(segment segment_1, segment segment_2){
 
 // point q lies on line segment 'pr'
 bool onSegment(S2d p, S2d q, S2d r) { 
-    if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && 
-        q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y)) 
+	double norme_pr(sqrt(pow((r.x-p.x),2)+pow((r.y-p.y),2)));
+	double scal((r.x-p.x)*(q.x-p.x)+(r.y-p.y)*(q.y-p.y));
+    if (-epsil_zero <= scal/norme_pr and scal/norme_pr <= norme_pr + epsil_zero)
        return true; 
   
     return false; 
@@ -38,8 +39,10 @@ bool onSegment(S2d p, S2d q, S2d r) {
 int orientation(S2d p, S2d q, S2d r) { 
     double val = (q.y - p.y) * (r.x - q.x) - 
               (q.x - p.x) * (r.y - q.y); 
-  
-    if (val == 0) return 0;
+              
+	double distance = val/sqrt(pow((p.y-p.y),2)+pow((p.x-q.x),2));
+	
+    if (abs(distance) <= epsil_zero) return 0;
   
     return (val > 0)? 1: 2;
 } 
