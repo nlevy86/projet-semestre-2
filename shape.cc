@@ -36,7 +36,7 @@ bool onSegment(S2d p, S2d q, S2d r) {
 // 1 --> Clockwise 
 // 2 --> Counterclockwise 
 int orientation(S2d p, S2d q, S2d r) { 
-    int val = (q.y - p.y) * (r.x - q.x) - 
+    double val = (q.y - p.y) * (r.x - q.x) - 
               (q.x - p.x) * (r.y - q.y); 
   
     if (val == 0) return 0;
