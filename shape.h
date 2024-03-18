@@ -5,8 +5,8 @@
 constexpr double epsil_zero(0.5) ;
 
 struct S2d{
-	double x = 0.;
-	double y = 0.;
+	double x=0.;
+	double y=0.;
 };
 
 struct segment{
