@@ -1,4 +1,3 @@
-#include <iostream>
 #include "shape.h"
 
 enum Statut_cor {DEAD, ALIVE} ;
