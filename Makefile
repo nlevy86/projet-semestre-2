@@ -2,8 +2,8 @@
 
 CXX     = g++
 CXXFLAGS = -g -Wall -std=c++11
-CXXFILES = projet.cc shape.cc message.cc
-OFILES = projet.o shape.o message.o
+CXXFILES = projet.cc shape.cc message.cc lifeform.cc
+OFILES = projet.o shape.o message.o lifeform.o
 
 # Definition de la premiere regle
 
@@ -20,6 +20,9 @@ shape.o: shape.cc shape.h
 
 message.o: message.cc message.h
 	$(CXX) $(CXXFLAGS) -c message.cc -o message.o
+
+lifeform.o: lifeform.cc lifeform.h message.h shape.h
+	$(CXX) $(CXXFLAGS) -c lifeform.cc -o lifeform.o
 
 # Definitions de cibles particulieres
 
