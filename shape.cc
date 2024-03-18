@@ -17,7 +17,7 @@ double ecart_angulaire(segment segment_1, segment segment_2){
 
 
 bool superpo_commun(segment segment_1, segment segment_2){
-	if (ecart_angulaire(segment_1, segment_2) == 0) {
+	if (abs(ecart_angulaire(segment_1, segment_2)) <= epsil_zero) {
 		return true;
 	}
 	return false;
