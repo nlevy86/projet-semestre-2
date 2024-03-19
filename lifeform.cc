@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool lifeform_in(S2d position){
+bool Algue::lifeform_in(S2d position){
 	if (position.x >=1 and position.x <= dmax-1 and 
 	position.y > 0 and position.y < dmax){
 		return true;
@@ -14,7 +14,7 @@ bool lifeform_in(S2d position){
 	exit(EXIT_FAILURE);
 }
 
-bool positive_age(double age){
+bool Algue::positive_age(double age){
 	if (age>0){
 		return true;
 	}
