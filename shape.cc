@@ -5,7 +5,7 @@
 
 using namespace std;
 
-double ecart_angulaire(segment segment_1, segment segment_2){
+double ecart_angulaire(Segment segment_1, Segment segment_2){
 	double ecart(segment_1.angle + (M_PI - segment_2.angle));
 	if (ecart < -M_PI){
 		ecart+= 2*M_PI;
@@ -16,7 +16,7 @@ double ecart_angulaire(segment segment_1, segment segment_2){
 }
 
 
-bool superpo_commun(segment segment_1, segment segment_2){
+bool superpo_commun(Segment segment_1, Segment segment_2){
 	if (abs(ecart_angulaire(segment_1, segment_2)) <= epsil_zero) {
 		return true;
 	}
@@ -66,3 +66,4 @@ bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2) {
   
     return false;
 } 
+
