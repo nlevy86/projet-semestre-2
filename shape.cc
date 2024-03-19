@@ -17,10 +17,7 @@ double ecart_angulaire(Segment segment_1, Segment segment_2){
 
 
 bool superpo_commun(Segment segment_1, Segment segment_2){
-	if (abs(ecart_angulaire(segment_1, segment_2)) <= epsil_zero) {
-		return true;
-	}
-	return false;
+	return abs(ecart_angulaire(segment_1, segment_2)) <= epsil_zero;
 }
 
 // point q lies on line segment 'pr'
