@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <string>
-#include "constantes.h"
 
 constexpr double epsil_zero(0.5) ;
 
