@@ -1,6 +1,6 @@
 #ifndef CONSTANTES_H_INCLUDED
 #define CONSTANTES_H_INCLUDED
-
+#include "constante.h"
 //
 // constantes.h  : constantes du Modèle
 //
