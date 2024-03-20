@@ -24,10 +24,7 @@ bool superpo_commun(Segment segment_1, Segment segment_2){
 bool onSegment(S2d p, S2d q, S2d r) { 
 	double norme_pr(sqrt(pow((r.x-p.x),2)+pow((r.y-p.y),2)));
 	double scal((r.x-p.x)*(q.x-p.x)+(r.y-p.y)*(q.y-p.y));
-    if (-epsil_zero <= scal/norme_pr and scal/norme_pr <= norme_pr + epsil_zero)
-       return true; 
-  
-    return false; 
+    return (-epsil_zero <= scal/norme_pr and scal/norme_pr <= norme_pr + epsil_zero)
 } 
 
 // 0 --> p, q and r are collinear 
