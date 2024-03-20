@@ -3,6 +3,7 @@
 #include <vector>
 #include "message.h"
 #include "shape.h"
+#include "constantes.h"
 
 
 class Algue{
