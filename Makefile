@@ -24,6 +24,9 @@ message.o: message.cc message.h
 lifeform.o: lifeform.cc lifeform.h message.h shape.h
 	$(CXX) $(CXXFLAGS) -c lifeform.cc -o lifeform.o
 
+simulation.o: simulation.cc simulation.h lifeform.h message.h shape.h
+	$(CXX) $(CXXFLAGS) -c simulation.cc -o simulation.o
+
 # Definitions de cibles particulieres
 
 depend:
@@ -44,3 +47,4 @@ projet.o: projet.cc
 shape.o: shape.cc shape.h
 message.o: message.cc message.h
 lifeform.o: lifeform.cc lifeform.h message.h shape.h constantes.h
+simulation.o: simulation.cc simulation.h lifeform.h message.h shape.h constantes.h
