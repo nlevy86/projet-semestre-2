@@ -5,16 +5,16 @@
 
 using namespace std;
 
-bool Algue::lifeform_in(S2d position){
+bool lifeform_in(S2d position){
 	if (position.x >=1 and position.x <= dmax-1 and 
-	position.y > 0 and position.y < dmax){
+	position.y >= 1 and position.y <= dmax-1){
 		return true;
 	}
 	cout << message::lifeform_center_outside(position.x, position.y);
 	exit(EXIT_FAILURE);
 }
 
-bool Algue::positive_age(double age){
+bool positive_age(int age){
 	if (age>0){
 		return true;
 	}
