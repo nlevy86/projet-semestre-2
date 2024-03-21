@@ -22,7 +22,7 @@ bool positive_age(int age){
 	exit(EXIT_FAILURE);
 }
 
-bool corail::corail_in(vector<Segment> seg){
+bool Corail::corail_in(vector<Segment> seg){
 	for (int i(0); i<= this->nb_segment-1; ++i){
 		if (seg[i].base.x < 1 or seg[i].base.x > dmax-1 or 
 		seg[i].base.y < 1 or seg[i].base.y > dmax-1){
@@ -42,7 +42,7 @@ bool corail::corail_in(vector<Segment> seg){
 	return true;
 }
 
-bool corail::segment_length_in(vector<Segment> seg){
+bool Corail::segment_length_in(vector<Segment> seg){
 	for (int i(0); i<= this->nb_segment-1; ++i){
 		if (seg[i].longueur >= l_repro or seg[i].longueur < l_repro - l_seg_interne){
 			message::segment_length_outside(this->id, seg[i].longueur);
@@ -52,7 +52,7 @@ bool corail::segment_length_in(vector<Segment> seg){
 	return true;
 }
 
-bool corail::segment_angle_in(vector<Segment> seg){
+bool Corail::segment_angle_in(vector<Segment> seg){
 	for (int i(0); i<= this->nb_segment-1; ++i){
 		if (seg[i].angle > M_PI or seg[i].longueur < -M_PI){
 			message::segment_angle_outside(this->id, seg[i].angle);
@@ -62,7 +62,7 @@ bool corail::segment_angle_in(vector<Segment> seg){
 	return true;
 }
 
-bool corail::segment_not_superpo(vector<Segment> seg){
+bool Corail::segment_not_superpo(vector<Segment> seg){
 	for (int i(0); i<= this->nb_segment-1; ++i){
 		if (superpo_commun(seg[i],seg[i+1])){
 			message::segment_superposition(this->id, i, i+1);
@@ -72,7 +72,7 @@ bool corail::segment_not_superpo(vector<Segment> seg){
 	return true;
 }
 
-bool corail::segment_not_coll_him(vector<Segment> seg){
+bool Corail::segment_not_coll_him(vector<Segment> seg){
 	if (this->nb_segment < 2){return true;}
 	for (int i(0); i<= this->nb_segment-3; ++i){
 		for (int j(i+2); j<= this->nb_segment-1; ++j){
