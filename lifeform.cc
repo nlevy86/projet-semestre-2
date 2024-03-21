@@ -6,12 +6,12 @@
 using namespace std;
 
 bool lifeform_in(S2d position){
-	if (position.x >=1 and position.x <= dmax-1 and 
-	position.y >= 1 and position.y <= dmax-1){
-		return true;
+	if (seg[i].base.x < 1 or seg[i].base.x > dmax-1 or 
+	seg[i].base.y < 1 or seg[i].base.y > dmax-1){
+		cout << message::lifeform_center_outside(position.x, position.y);
+		exit(EXIT_FAILURE);
 	}
-	cout << message::lifeform_center_outside(position.x, position.y);
-	exit(EXIT_FAILURE);
+	return true
 }
 
 bool positive_age(int age){
