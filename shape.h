@@ -17,6 +17,6 @@ struct Segment{
 
 double ecart_angulaire(Segment segment_1, Segment segment_2);
 bool superpo_commun(Segment segment_1, Segment segment_2);
-bool onSegment(S2d p, S2d q, S2d r);
+bool on_segment(S2d p, S2d q, S2d r);
 int orientation(S2d p, S2d q, S2d r);
-bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2);
+bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2);
