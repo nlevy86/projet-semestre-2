@@ -88,7 +88,7 @@ bool Corail::segment_not_coll_him(vector<Segment> seg){
 	return true;
 }
 
-bool ray_in(double ray){
+bool Sca::ray_in(double ray){
 	if (ray>=r_sca and ray<r_sca_repro){
 		return true;
 	}
