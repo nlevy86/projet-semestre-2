@@ -2,8 +2,8 @@
 
 CXX     = g++
 CXXFLAGS = -g -Wall -std=c++11
-CXXFILES = projet.cc shape.cc message.cc lifeform.cc
-OFILES = projet.o shape.o message.o lifeform.o
+CXXFILES = projet.cc shape.cc message.cc lifeform.cc simulation.cc
+OFILES = projet.o shape.o message.o lifeform.o simulation.o
 
 # Definition de la premiere regle
 
