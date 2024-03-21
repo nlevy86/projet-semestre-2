@@ -79,7 +79,7 @@ bool Corail::segment_not_coll_him(vector<Segment> seg){
 			S2d fin_j;
 			fin_j.x = seg[j].base.x + seg[j].longueur * cos(seg[j].angle);
 			fin_j.y = seg[j].base.y + seg[j].longueur * sin(seg[j].angle);
-			if (doIntersect(seg[i].base, fin_i, seg[j].base, fin_j)){
+			if (do_intersect(seg[i].base, fin_i, seg[j].base, fin_j)){
 				message::segment_collision(id, i, id, j);;
 				exit(EXIT_FAILURE);
 			}
