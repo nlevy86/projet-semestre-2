@@ -24,15 +24,17 @@ bool positive_age(int age){
 
 bool Corail::corail_in(vector<Segment> seg){
 	for (int i(0); i<= nb_segment-1; ++i){
-		if (seg[i].base.x < 1 or seg[i].base.x > dmax-1 or 
-		seg[i].base.y < 1 or seg[i].base.y > dmax-1){
+		S2d fin;
+		fin.x = seg[i].base.x + seg[i].longueur * cos(seg[i].angle);
+		fin.y = seg[i].base.y + seg[i].longueur * sin(seg[i].angle);
+		if ((seg[i].base.x < 1 or seg[i].base.x > dmax-1 or 
+		seg[i].base.y < 1 or seg[i].base.y > dmax-1) and 
+		(fin.x < 1 or fin.x > dmax-1 or 
+		fin.y < 1 or fin.y > dmax-1)){
 			cout << 
 			message::lifeform_computed_outside(id, seg[i].base.x, seg[i].base.y);
 			exit(EXIT_FAILURE);
 		}
-		S2d fin;
-		fin.x = seg[i].base.x + seg[i].longueur * cos(seg[i].angle);
-		fin.y = seg[i].base.y + seg[i].longueur * sin(seg[i].angle);
 		if (fin.x < 1 or fin.x > dmax-1 or fin.y < 1 or fin.y > dmax-1){
 			cout << 
 			message::lifeform_computed_outside(id, seg[i].base.x, seg[i].base.y);
