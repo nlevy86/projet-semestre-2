@@ -21,7 +21,7 @@ bool superpo_commun(Segment segment_1, Segment segment_2){
 }
 
 // point q lies on line segment 'pr'
-bool onSegment(S2d p, S2d q, S2d r) { 
+bool on_segment(S2d p, S2d q, S2d r) { 
 	double norme_pr(sqrt(pow((r.x-p.x),2)+pow((r.y-p.y),2)));
 	double scal((r.x-p.x)*(q.x-p.x)+(r.y-p.y)*(q.y-p.y));
     return (-epsil_zero <= scal/norme_pr and scal/norme_pr <= norme_pr + epsil_zero)
@@ -41,7 +41,7 @@ int orientation(S2d p, S2d q, S2d r) {
     return (val > 0)? 1: 2;
 } 
 
-bool doIntersect(S2d p1, S2d q1, S2d p2, S2d q2) { 
+bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2) { 
     int o1 = orientation(p1, q1, p2); 
     int o2 = orientation(p1, q1, q2); 
     int o3 = orientation(p2, q2, p1); 
