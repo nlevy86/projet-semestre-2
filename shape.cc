@@ -50,13 +50,13 @@ bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2) {
     if (o1 != o2 && o3 != o4) 
         return true; 
  
-    if (o1 == 0 && onSegment(p1, p2, q1)) return true; 
+    if (o1 == 0 && on_segment(p1, p2, q1)) return true; 
   
-    if (o2 == 0 && onSegment(p1, q2, q1)) return true; 
+    if (o2 == 0 && on_segment(p1, q2, q1)) return true; 
   
-    if (o3 == 0 && onSegment(p2, p1, q2)) return true; 
+    if (o3 == 0 && on_segment(p2, p1, q2)) return true; 
   
-    if (o4 == 0 && onSegment(p2, q1, q2)) return true; 
+    if (o4 == 0 && on_segment(p2, q1, q2)) return true; 
   
     return false;
 } 
