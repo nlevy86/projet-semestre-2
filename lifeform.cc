@@ -35,11 +35,6 @@ bool Corail::corail_in(vector<Segment> seg){
 			message::lifeform_computed_outside(id, seg[i].base.x, seg[i].base.y);
 			exit(EXIT_FAILURE);
 		}
-		if (fin.x < 1 or fin.x > dmax-1 or fin.y < 1 or fin.y > dmax-1){
-			cout << 
-			message::lifeform_computed_outside(id, seg[i].base.x, seg[i].base.y);
-			exit(EXIT_FAILURE);
-		}
 	}
 	return true;
 }
