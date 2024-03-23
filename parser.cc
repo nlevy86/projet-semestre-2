@@ -27,6 +27,7 @@ void parser_file(const std::string& file) {
 				Algae algae{};
 				iss >> algae.x >> algae.y >> algae.age;
 				algaeList.push_back(algae);
+                //1) envoyer dans des vrbls temporaires x y age 2) appeler new alga, dans NA faire .emplace_back
 				numAlgae--;
 			} else {
 				iss >> numCorals;		

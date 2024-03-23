@@ -1,3 +1,6 @@
+#ifndef LIFEFORM_H
+#define LIFEFORM_H
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -47,3 +50,4 @@ private:
 	unsigned int cor_id_cible;
 };
 
+#endif
