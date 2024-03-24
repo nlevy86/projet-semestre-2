@@ -11,7 +11,7 @@ enum Section { ALGA, CORAL, SCAVENGER, NONE };
 
 class Simulation {
 public:
-    void lecture(std::string nom_fichier); // void lecture (char * nom_fichier)
+    void lecture(std::string nom_fichier); 
 private:
 
     std::vector<Algue> algae {};

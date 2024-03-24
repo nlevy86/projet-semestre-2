@@ -82,9 +82,13 @@ void Simulation::lecture(const std::string& nom_fichier) {
                 int age = 0;
                 double rayon = 0; 
                 int status_sca = 0;
-                unsigned int target_id = 0;
+                int target_id = -1;
 
-                ligne >> x >> y >> age >> rayon >> status_sca >> target_id;
+                //OPTION QUI PRENDRAIT COMPTE DU CAS OU IL N Y A PAS DE TARGET ID
+                ligne >> x >> y >> age >> rayon >> status_sca;
+                if(status_sca){
+                    ligne >> target_id;    
+                }
                 new_sca(x, y, age, rayon, status_sca, target_id);
                 
                 --nb;
