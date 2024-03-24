@@ -20,7 +20,7 @@ bool superpo_commun(Segment segment_1, Segment segment_2, bool is_epsil_zero){
 	if (is_epsil_zero){
 		return abs(ecart_angulaire(segment_1, segment_2)) <= epsil_zero;
 	}
-	return abs(ecart_angulaire(segment_1, segment_2)) <= 0;
+	return abs(ecart_angulaire(segment_1, segment_2)) <= epsil_1;
 }
 
 // point q lies on line segment 'pr'
