@@ -104,17 +104,21 @@ void Simulation::lecture(const std::string& nom_fichier) {
 
 void Simulation::new_alga(double x, double y, int age){
     algae.emplace_back(S2d{x,y}, age);
+    
 }
 
 void Simulation::new_sca(double x, double y, int age, double rayon, int status_sca, unsigned int target_id){
     scavengers.emplace_back(S2d(x,y), age, rayon, status_sca ? EATING : FREE, target_id);
+
 }
 
 void Simulation::new_segment(double age, double length, Corail *current){
     current->add_segment(age, length);
+
 }
 
 Corail* Simulation::new_coral(double x, double y, int age, unsigned int id, int status_cor, int dir_rot, int status_dev, int nb_seg){
     corals.emplace_back(S2d(x,y), age, id, status_cor ? ALIVE : DEAD, dir_rot ? INVTRIGO : TRIGO, status_dev ? REPRO : EXTEND, nb_seg);
+    
     return &(corals.back());
 }
