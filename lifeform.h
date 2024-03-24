@@ -45,7 +45,7 @@ private:
 class Sca{
 
 public:
-	Sca(S2d _pos_sca, int _age_sca, double _ray_sca, Status_sca _status_scaven, unsigned int _cor_id_cible ) : 
+	Sca(S2d _pos_sca, int _age_sca, double _ray_sca, Status_sca _status_scaven, int _cor_id_cible = -1 ) : 
 			pos_sca(_pos_sca), age_sca(_age_sca), status_scaven(_status_scaven), cor_id_cible(_cor_id_cible) {} 
 
 	const bool lifeform_in(S2d position); 
@@ -56,7 +56,7 @@ private:
 	int age_sca;
 	double ray_sca;
 	Status_sca status_scaven;
-	unsigned int cor_id_cible;
+	int cor_id_cible;
 };
 
 #endif

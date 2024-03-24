@@ -20,7 +20,7 @@ private:
 
     void new_alga(double x, double y, int age);
     Corail* new_coral(double x, double y, int age, unsigned int id, int status_cor, int dir_rot, int status_dev, int nb_seg);
-    void new_sca(double x, double y, int age, double rayon, int status_sca, unsigned int target_id);
+    void new_sca(double x, double y, int age, double rayon, int status_sca, int target_id);
     void new_segment(double angle, double length, Corail *current);
 };
 
