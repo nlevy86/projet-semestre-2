@@ -3,6 +3,7 @@
 #include <string>
 
 constexpr double epsil_zero(0.5) ;
+constexpr double epsil_1(0.0000000001);
 
 struct S2d{
 	double x=0.;
