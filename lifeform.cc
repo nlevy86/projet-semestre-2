@@ -89,11 +89,16 @@ bool Corail::segment_not_coll_him(vector<Segment> seg, bool is_epsil_zero){
 }
 
 void Corail::add_segment(double angle, double length) {
-	Segment tail = cor.back();
+	double x = pos_cor.x;
+	double y = pos_cor.y;
 
-	double x = tail.base.x + tail.longueur*cos(tail.angle);
-	double y = tail.base.y + tail.longueur*sin(tail.angle);
+	if(!cor.empty()) {
+		Segment tail = cor.back();
 
+		x = tail.base.x + tail.longueur*cos(tail.angle);
+		y = tail.base.y + tail.longueur*sin(tail.angle);
+	}
+	
 	cor.emplace_back(S2d{x, y}, angle, length);
 }
 
