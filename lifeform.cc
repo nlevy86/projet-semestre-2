@@ -88,6 +88,15 @@ bool Corail::segment_not_coll_him(vector<Segment> seg, bool is_epsil_zero){
 	return true;
 }
 
+void Corail::add_segment(double angle, double length) {
+	Segment tail = cor.back();
+
+	double x = tail.base.x + tail.longueur*cos(tail.angle);
+	double y = tail.base.y + tail.longueur*sin(tail.angle);
+
+	cor.emplace_back(S2d{x, y}, angle, length);
+}
+
 bool Sca::ray_in(double ray){
 	if (ray>=r_sca and ray<r_sca_repro){
 		return true;

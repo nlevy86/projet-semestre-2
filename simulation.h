@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "lifeform.h"
 
 enum Section { ALGA, CORAL, SCAVENGER, NONE };
 
@@ -12,10 +13,15 @@ class Simulation {
 public:
     void lecture(std::string nom_fichier); // void lecture (char * nom_fichier)
 private:
+
+    std::vector<Algue> algae {};
+    std::vector<Corail> corals {};
+    std::vector<Sca> scavengers {};
+
     void new_alga(double x, double y, int age);
-    void new_coral(double x, double y, int age, unsigned int id, int status_cor, int dir_rot, int status_dev, int nb_seg);
+    Corail* new_coral(double x, double y, int age, unsigned int id, int status_cor, int dir_rot, int status_dev, int nb_seg);
     void new_sca(double x, double y, int age, double rayon, int status_sca, unsigned int target_id);
-    void new_segment(double x, double y, double angle, double length);
+    void new_segment(double angle, double length, Corail *current);
 };
 
 #endif
