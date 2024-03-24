@@ -106,7 +106,7 @@ void Simulation::new_alga(double x, double y, int age){
     algae.emplace_back(S2d{x,y}, age);
 }
 
-void Simulation::new_sca(double x, double y, int age, double rayon, int status_sca, unsigned int target_id){
+void Simulation::new_sca(double x, double y, int age, double rayon, int status_sca, int target_id){
     scavengers.emplace_back(S2d(x,y), age, rayon, status_sca ? EATING : FREE, target_id);
 }
 
