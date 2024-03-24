@@ -5,6 +5,8 @@
 
 using namespace std;
 
+bool superpo_commun(Segment segment_1, Segment segment_2, bool is_epsil_zero);
+
 double ecart_angulaire(Segment segment_1, Segment segment_2){
 	double ecart(segment_1.angle + (M_PI - segment_2.angle));
 	if (ecart < -M_PI){
