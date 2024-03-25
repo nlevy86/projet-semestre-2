@@ -43,16 +43,23 @@ bool on_segment(S2d p, S2d q, S2d r, bool is_epsil_zero) {
 // 0 --> p, q and r are collinear 
 // 1 --> Clockwise 
 // 2 --> Counterclockwise 
-int orientation(S2d p, S2d q, S2d r, bool is_epsil_zero) { 
-    double val = (q.y - p.y) * (r.x - q.x) - 
-              (q.x - p.x) * (r.y - q.y); 
-              
-	double distance = val/sqrt(pow((p.y-p.y),2)+pow((p.x-q.x),2));
+
+int orientation(S2d p, S2d q, S2d r, bool is_epsil_zero){
+	double val = (q.y - p.y) * (r.x - q.x) -
+				(q.x - p.x) * (r.y - q.y);
 	
-    if (abs(distance) <= epsil_zero) return 0;
-  
-    return (val > 0)? 1: 2;
-} 
+	if (is_epsil_zero){
+		double distance = val/sqrt(pow((p.y - q.y),2) + pow((p.x - q.x),2));
+		if(abs(distance) <= epsil_zero){
+			return 0;
+		}
+	} else {
+		if (val ==0){
+			return 0;
+		}
+	}
+	return (val > 0)? 1: 2;
+}
 
 bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2, bool is_epsil_zero) { 
     int o1 = orientation(p1, q1, p2, is_epsil_zero); 
