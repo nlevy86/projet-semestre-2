@@ -114,6 +114,22 @@ void Simulation::new_sca(double x, double y, int age, double rayon, int status_s
 
 void Simulation::new_segment(double age, double length, Corail *current){
     current->add_segment(age, length);
+    S2d fin_c{};
+    fin_c.x = current->cor.back().base.x + current->cor.back().longueur * cos(current->cor.back().angle);
+	fin_c.y = current->cor.back().base.y + current->cor.back().longueur * sin(current->cor.back().angle);
+
+    for(size_t i(0); i < corals.size(); ++i){ //i indice du corail i en cours
+       for(size_t j(0); j < corals[i].cor.size(; ++j)){ //j indice du segment j en cours du corail i en cours
+			S2d fin_j{};
+			fin_j.x = corals[i].cor[j].base.x + corals[i].cor[j].longueur * cos(corals[i].cor[j].angle);
+			fin_j.y = corals[i].cor[j].base.y + corals[i].cor[j].longueur * sin(corals[i].cor[j].angle);
+            if(do_intersect(current->cor.back().base, fin_c, corals[i].cor[j].base, fin_j, false)){
+                cout << message::segment_collision(current->id, (current->cor.size() - 1), corals.[i].id, j);
+                std::exit(EXIT_FAILURE);
+            }
+       } 
+    }
+
 
 }
 
