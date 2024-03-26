@@ -3,6 +3,7 @@
 #include <string>
 #include "lifeform.h"
 
+
 using namespace std;
 
 const bool lifeform_in(S2d position){
