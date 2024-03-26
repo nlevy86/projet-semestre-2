@@ -6,21 +6,49 @@
 
 using namespace std;
 
-const bool lifeform_in(S2d position){
-	if (position.x < 1 or position.x > dmax-1 or 
-		position.y < 1 or position.y > dmax-1){
-		cout << message::lifeform_center_outside(position.x, position.y);
+const bool Algue::lifeform_in(){
+	if (pos_algue.x < 1 or pos_algue.x > dmax-1 or 
+		pos_algue.y < 1 or pos_algue.y > dmax-1){
+		cout << message::lifeform_center_outside(pos_algue.x, pos_algue.y);
 		exit(EXIT_FAILURE);
 		return false;
 	}
 	return true;
 }
 
-const bool positive_age(int age){
-	if (age>0){
+const bool Sca::lifeform_in(){
+	if (pos_sca.x < 1 or pos_sca.x > dmax-1 or 
+		pos_sca.y < 1 or pos_sca.y > dmax-1){
+		cout << message::lifeform_center_outside(pos_sca.x, pos_sca.y);
+		exit(EXIT_FAILURE);
+		return false;
+	}
+	return true;
+}
+
+const bool Algue::positive_age(){
+	if (age_algue>0){
 		return true;
 	}
-	cout << message::lifeform_age(age);
+	cout << message::lifeform_age(age_algue);
+	exit(EXIT_FAILURE);
+	return false;
+}
+
+const bool Corail::positive_age(){
+	if (age_corail>0){
+		return true;
+	}
+	cout << message::lifeform_age(age_corail);
+	exit(EXIT_FAILURE);
+	return false;
+}
+
+const bool Sca::positive_age(int age){
+	if (age_sca>0){
+		return true;
+	}
+	cout << message::lifeform_age(age_sca);
 	exit(EXIT_FAILURE);
 	return false;
 }
@@ -110,11 +138,11 @@ const void Corail::add_segment(double angle, double length) {
 	cor.emplace_back(S2d{x, y}, angle, length);
 }
 
-const bool Sca::ray_in(double ray){
-	if (ray>=r_sca and ray<r_sca_repro){
+const bool Sca::ray_in(){
+	if (ray_sca>=r_sca and ray_sca<r_sca_repro){
 		return true;
 	}
-	cout << message::scavenger_radius_outside(ray);
+	cout << message::scavenger_radius_outside(ray_sca);
 	exit(EXIT_FAILURE);
 	return false;
 }
