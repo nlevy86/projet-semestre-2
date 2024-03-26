@@ -107,6 +107,8 @@ void Simulation::new_alga(double x, double y, int age){
     pos.x = x;
     pos.y = y;
     algae.emplace_back(pos, age);
+    Algue::lifeform_in(pos);
+    Algue::positive_age(age);
     
 }
 
@@ -115,6 +117,9 @@ void Simulation::new_sca(double x, double y, int age, double rayon, int status_s
     pos.x = x;
     pos.y = y;
     scavengers.emplace_back(pos, age, rayon, status_sca ? EATING : FREE, target_id);
+    Sca::lifeform_in(pos);
+    Sca::positive_age(age);
+    Sca::ray_in(rayon);
     if(scavengers.back().id >= 0){
         unsigned int pos_target_id(scavengers.back().id); //implicit cast
         if(!id_match(pos_target_id)){
