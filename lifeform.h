@@ -23,12 +23,12 @@ public:
 	Corail(S2d _pos_cor, int _age_corail, unsigned int _id, Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, Status_dev _status_develo, int _nb_segment) : 
 			pos_cor(_pos_cor), age_corail(_age_corail), id(_id), status_corail(_status_corail), dir_rot_corail(_dir_rot_corail), status_develo(_status_develo), nb_segment(_nb_segment) {}
 
-	const bool corail_in(std::vector<Segment> seg);
+	const bool corail_in();
 	const bool positive_age(int age);
-	const bool segment_length_in(std::vector<Segment> seg);
-	const bool segment_angle_in(std::vector<Segment> seg);
-	const bool segment_not_superpo(std::vector<Segment> seg, bool is_epsil_zero);
-	const bool segment_not_coll_him(std::vector<Segment> seg, bool is_epsil_zero);
+	const bool segment_length_in();
+	const bool segment_angle_in();
+	const bool segment_not_superpo(bool is_epsil_zero);
+	const bool segment_not_coll_him(bool is_epsil_zero);
 	const void add_segment(double angle, double length);
 private:
 	S2d pos_cor;

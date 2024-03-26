@@ -25,17 +25,17 @@ const bool positive_age(int age){
 	return false;
 }
 
-const bool Corail::corail_in(vector<Segment> seg){
+const bool Corail::corail_in(){
 	for (int i(0); i<= nb_segment-1; ++i){
 		S2d fin;
-		fin.x = seg[i].base.x + seg[i].longueur * cos(seg[i].angle);
-		fin.y = seg[i].base.y + seg[i].longueur * sin(seg[i].angle);
-		if ((seg[i].base.x < 1 or seg[i].base.x > dmax-1 or 
-		seg[i].base.y < 1 or seg[i].base.y > dmax-1) and 
+		fin.x = cor[i].base.x + cor[i].longueur * cos(cor[i].angle);
+		fin.y = cor[i].base.y + cor[i].longueur * sin(cor[i].angle);
+		if ((cor[i].base.x < 1 or cor[i].base.x > dmax-1 or 
+		cor[i].base.y < 1 or cor[i].base.y > dmax-1) and 
 		(fin.x < 1 or fin.x > dmax-1 or 
 		fin.y < 1 or fin.y > dmax-1)){
 			cout << 
-			message::lifeform_computed_outside(id, seg[i].base.x, seg[i].base.y);
+			message::lifeform_computed_outside(id, cor[i].base.x, cor[i].base.y);
 			exit(EXIT_FAILURE);
 			return false;
 		}
@@ -43,10 +43,10 @@ const bool Corail::corail_in(vector<Segment> seg){
 	return true;
 }
 
-const bool Corail::segment_length_in(vector<Segment> seg){
+const bool Corail::segment_length_in(){
 	for (int i(0); i<= nb_segment-1; ++i){
-		if (seg[i].longueur >= l_repro or seg[i].longueur < l_repro - l_seg_interne){
-			message::segment_length_outside(id, seg[i].longueur);
+		if (cor[i].longueur >= l_repro or cor[i].longueur < l_repro - l_seg_interne){
+			message::segment_length_outside(id, cor[i].longueur);
 			exit(EXIT_FAILURE);
 			return false;
 		}
@@ -54,10 +54,10 @@ const bool Corail::segment_length_in(vector<Segment> seg){
 	return true;
 }
 
-const bool Corail::segment_angle_in(vector<Segment> seg){
+const bool Corail::segment_angle_in(){
 	for (int i(0); i<= nb_segment-1; ++i){
-		if (seg[i].angle > M_PI or seg[i].longueur < -M_PI){
-			message::segment_angle_outside(id, seg[i].angle);
+		if (cor[i].angle > M_PI or cor[i].longueur < -M_PI){
+			message::segment_angle_outside(id, cor[i].angle);
 			exit(EXIT_FAILURE);
 			return false;
 		}
@@ -65,9 +65,9 @@ const bool Corail::segment_angle_in(vector<Segment> seg){
 	return true;
 }
 
-const bool Corail::segment_not_superpo(vector<Segment> seg, bool is_epsil_zero){
+const bool Corail::segment_not_superpo(bool is_epsil_zero){
 	for (int i(0); i<= nb_segment-1; ++i){
-		if (superpo_commun(seg[i],seg[i+1], is_epsil_zero)){
+		if (shape::superpo_commun(cor[i],cor[i+1], is_epsil_zero)){
 			message::segment_superposition(id, i, i+1);
 			exit(EXIT_FAILURE);
 			return false;
@@ -76,17 +76,17 @@ const bool Corail::segment_not_superpo(vector<Segment> seg, bool is_epsil_zero){
 	return true;
 }
 
-const bool Corail::segment_not_coll_him(vector<Segment> seg, bool is_epsil_zero){
+const bool Corail::segment_not_coll_him(bool is_epsil_zero){
 	if (nb_segment < 2){return true;}
 	for (int i(0); i<= nb_segment-3; ++i){
 		for (int j(i+2); j<= nb_segment-1; ++j){
 			S2d fin_i;
-			fin_i.x = seg[i].base.x + seg[i].longueur * cos(seg[i].angle);
-			fin_i.y = seg[i].base.y + seg[i].longueur * sin(seg[i].angle);
+			fin_i.x = cor[i].base.x + cor[i].longueur * cos(cor[i].angle);
+			fin_i.y = cor[i].base.y + cor[i].longueur * sin(cor[i].angle);
 			S2d fin_j;
-			fin_j.x = seg[j].base.x + seg[j].longueur * cos(seg[j].angle);
-			fin_j.y = seg[j].base.y + seg[j].longueur * sin(seg[j].angle);
-			if (do_intersect(seg[i].base, fin_i, seg[j].base, fin_j, is_epsil_zero)){
+			fin_j.x = cor[j].base.x + cor[j].longueur * cos(cor[j].angle);
+			fin_j.y = cor[j].base.y + cor[j].longueur * sin(cor[j].angle);
+			if (shape::do_intersect(cor[i].base, fin_i, cor[j].base, fin_j, is_epsil_zero)){
 				message::segment_collision(id, i, id, j);;
 				exit(EXIT_FAILURE);
 				return false;
@@ -96,7 +96,7 @@ const bool Corail::segment_not_coll_him(vector<Segment> seg, bool is_epsil_zero)
 	return true;
 }
 
-void Corail::add_segment(double angle, double length) {
+const void Corail::add_segment(double angle, double length) {
 	double x = pos_cor.x;
 	double y = pos_cor.y;
 
