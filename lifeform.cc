@@ -10,6 +10,7 @@ const bool lifeform_in(S2d position){
 		position.y < 1 or position.y > dmax-1){
 		cout << message::lifeform_center_outside(position.x, position.y);
 		exit(EXIT_FAILURE);
+		return false;
 	}
 	return true;
 }
@@ -20,6 +21,7 @@ const bool positive_age(int age){
 	}
 	cout << message::lifeform_age(age);
 	exit(EXIT_FAILURE);
+	return false;
 }
 
 const bool Corail::corail_in(vector<Segment> seg){
@@ -34,6 +36,7 @@ const bool Corail::corail_in(vector<Segment> seg){
 			cout << 
 			message::lifeform_computed_outside(id, seg[i].base.x, seg[i].base.y);
 			exit(EXIT_FAILURE);
+			return false;
 		}
 	}
 	return true;
@@ -44,6 +47,7 @@ const bool Corail::segment_length_in(vector<Segment> seg){
 		if (seg[i].longueur >= l_repro or seg[i].longueur < l_repro - l_seg_interne){
 			message::segment_length_outside(id, seg[i].longueur);
 			exit(EXIT_FAILURE);
+			return false;
 		}
 	}
 	return true;
@@ -54,6 +58,7 @@ const bool Corail::segment_angle_in(vector<Segment> seg){
 		if (seg[i].angle > M_PI or seg[i].longueur < -M_PI){
 			message::segment_angle_outside(id, seg[i].angle);
 			exit(EXIT_FAILURE);
+			return false;
 		}
 	}
 	return true;
@@ -64,6 +69,7 @@ const bool Corail::segment_not_superpo(vector<Segment> seg, bool is_epsil_zero){
 		if (superpo_commun(seg[i],seg[i+1], is_epsil_zero)){
 			message::segment_superposition(id, i, i+1);
 			exit(EXIT_FAILURE);
+			return false;
 		}
 	}
 	return true;
@@ -82,6 +88,7 @@ const bool Corail::segment_not_coll_him(vector<Segment> seg, bool is_epsil_zero)
 			if (do_intersect(seg[i].base, fin_i, seg[j].base, fin_j, is_epsil_zero)){
 				message::segment_collision(id, i, id, j);;
 				exit(EXIT_FAILURE);
+				return false;
 			}
 		}
 	}
@@ -108,4 +115,5 @@ const bool Sca::ray_in(double ray){
 	}
 	cout << message::scavenger_radius_outside(ray);
 	exit(EXIT_FAILURE);
+	return false;
 }
