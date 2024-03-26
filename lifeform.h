@@ -30,6 +30,9 @@ public:
 	const bool segment_not_superpo(bool is_epsil_zero);
 	const bool segment_not_coll_him(bool is_epsil_zero);
 	const void add_segment(double angle, double length);
+	const Segment get_cor_element(int i);
+	const size_t get_cor_size();
+	const unsigned int get_cor_id();
 private:
 	S2d pos_cor;
 	int age_corail;
@@ -42,7 +45,7 @@ private:
 	
 };
 
-class Sca{
+class Sca {
 
 public:
 	Sca(S2d _pos_sca, int _age_sca, double _ray_sca, Status_sca _status_scaven, int _cor_id_cible = -1 ) : 
@@ -51,6 +54,7 @@ public:
 	const bool lifeform_in(); 
 	const bool positive_age();
 	const bool ray_in();
+	const int get_id_cible();
 private:
 	S2d pos_sca;
 	int age_sca;

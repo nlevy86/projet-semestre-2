@@ -44,7 +44,7 @@ const bool Corail::positive_age(){
 	return false;
 }
 
-const bool Sca::positive_age(int age){
+const bool Sca::positive_age(){
 	if (age_sca>0){
 		return true;
 	}
@@ -95,7 +95,7 @@ const bool Corail::segment_angle_in(){
 
 const bool Corail::segment_not_superpo(bool is_epsil_zero){
 	for (int i(0); i<= nb_segment-1; ++i){
-		if (shape::superpo_commun(cor[i],cor[i+1], is_epsil_zero)){
+		if (superpo_commun(cor[i],cor[i+1], is_epsil_zero)){
 			message::segment_superposition(id, i, i+1);
 			exit(EXIT_FAILURE);
 			return false;
@@ -114,7 +114,7 @@ const bool Corail::segment_not_coll_him(bool is_epsil_zero){
 			S2d fin_j;
 			fin_j.x = cor[j].base.x + cor[j].longueur * cos(cor[j].angle);
 			fin_j.y = cor[j].base.y + cor[j].longueur * sin(cor[j].angle);
-			if (shape::do_intersect(cor[i].base, fin_i, cor[j].base, fin_j, is_epsil_zero)){
+			if (do_intersect(cor[i].base, fin_i, cor[j].base, fin_j, is_epsil_zero)){
 				message::segment_collision(id, i, id, j);;
 				exit(EXIT_FAILURE);
 				return false;
@@ -138,6 +138,19 @@ const void Corail::add_segment(double angle, double length) {
 	cor.emplace_back(S2d{x, y}, angle, length);
 }
 
+const Segment Corail::get_cor_element(int i){
+	return cor[i];
+}
+
+const size_t Corail::get_cor_size(){
+	return cor.size();
+}
+
+const unsigned int Corail::get_cor_id(){
+	return id;
+}
+
+
 const bool Sca::ray_in(){
 	if (ray_sca>=r_sca and ray_sca<r_sca_repro){
 		return true;
@@ -145,4 +158,8 @@ const bool Sca::ray_in(){
 	cout << message::scavenger_radius_outside(ray_sca);
 	exit(EXIT_FAILURE);
 	return false;
+}
+
+const int Sca::get_id_cible(){
+	return cor_id_cible;
 }
