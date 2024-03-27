@@ -5,22 +5,18 @@
 #include <sstream>
 
 using namespace std;
+	
 
 void Simulation::lecture(const string& nom_fichier) {
     ifstream fichier(nom_fichier.c_str());
-
     Section section = Section::NONE;
     string buffer{};
     int nb{};
-
     while(getline(fichier, buffer)){
-        if (buffer[0] == '#' or buffer.size() <= 1){
+        if (buffer[0] == '#' or buffer.size() < 1){
 			continue;
         }
-
         istringstream ligne(buffer);
-		cout << nb << " - " << ligne.str() << endl;
-
 		switch(section) {
         case NONE:
             ligne >> nb;
@@ -28,13 +24,10 @@ void Simulation::lecture(const string& nom_fichier) {
             break; 
         case ALGA:
             if(nb > 0){
-                double x = 0;
-                double y = 0;
+                double x(0), y(0);
                 int age = 0;
-
                 ligne >> x >> y >> age;
                 new_alga(x, y, age);
-
                 --nb;
             } else {
                 ligne >> nb;
@@ -43,61 +36,44 @@ void Simulation::lecture(const string& nom_fichier) {
             break;
         case CORAL:
             if(nb > 0){
-                double x = 0;
-                double y = 0;
-                int age = 0;
+                double x(0), y(0);
+                int age(0), status_cor(0),dir_rot(0), status_dev(0),nb_seg(0);
                 unsigned int id = 0;
-                int status_cor = 0;
-                int dir_rot = 0;
-                int status_dev = 0;
-                int nb_seg = 0;
-
-				ligne >> x >> y >> age >> id >> status_cor >> dir_rot >> status_dev >> nb_seg;
-                Corail *current = new_coral(x, y, age, id, status_cor, dir_rot, status_dev, nb_seg);
-                
+				ligne >> x >> y >> age >> id >> status_cor >> dir_rot >> status_dev 
+				>> nb_seg;
+                Corail *current = new_coral(x, y, age, id, status_cor, 
+														dir_rot, status_dev, nb_seg);               
                 for(int i(0); i < nb_seg; ++i) {
-                    getline(fichier, buffer);
-                    
+                    getline(fichier, buffer);                    
                     if (buffer[0] == '#' or buffer.empty()){
                         continue;
                     }
-
 					istringstream ligne_seg(buffer);
-
-                    double angle = 0;
-                    double len = 0;
+                    double angle(0), len(0);
                     ligne_seg >> angle >> len;
 
                     new_segment(angle, len, current);
                 }
-
-				// more checks needed
-
+				corals.back().corail_in();
+				corals.back().segment_length_in();
+				corals.back().segment_angle_in();
+				corals.back().segment_not_superpo(false);
+				corals.back().segment_not_coll_him(false);
 				--nb;
             } else {
                 ligne >> nb;
                 section = Section::SCAVENGER;
             }
-
             break;
         case SCAVENGER:
             if(nb > 0){
-                double x = 0;
-                double y = 0;
-                int age = 0;
-                double rayon = 0; 
-                int status_sca = 0;
-                int target_id = -1;
-
-                //OPTION QUI PRENDRAIT COMPTE DU CAS OU IL N Y A PAS DE TARGET ID
+                double x(0), y(0), rayon(0);
+                int age(0), status_sca(0), target_id(-1);
                 ligne >> x >> y >> age >> rayon >> status_sca;
-
                 if(status_sca){
                     ligne >> target_id;    
                 }
-
-                new_sca(x, y, age, rayon, status_sca, target_id);
-                
+                new_sca(x, y, age, rayon, status_sca, target_id);               
                 --nb;
             }
             break;
@@ -105,9 +81,11 @@ void Simulation::lecture(const string& nom_fichier) {
             break;
         }
     }
-
     fichier.close();
 }
+
+
+
 
 void Simulation::new_alga(double x, double y, int age){
     S2d pos{};
@@ -119,7 +97,8 @@ void Simulation::new_alga(double x, double y, int age){
     
 }
 
-void Simulation::new_sca(double x, double y, int age, double rayon, int status_sca, int target_id){
+void Simulation::new_sca(double x, double y, int age,
+	double rayon, int status_sca, int target_id){
     S2d pos{};
     pos.x = x;
     pos.y = y;
@@ -142,30 +121,45 @@ void Simulation::new_segment(double age, double length, Corail *current){
     current->add_segment(age, length);
     S2d fin_c{};
 	size_t cor_size(current->get_cor_size());
-    fin_c.x = current->get_cor_element(cor_size -1).base.x + current->get_cor_element(cor_size -1).longueur * cos(current->get_cor_element(cor_size -1).angle);
-	fin_c.y = current->get_cor_element(cor_size -1).base.y + current->get_cor_element(cor_size -1).longueur * sin(current->get_cor_element(cor_size -1).angle);
+    fin_c.x = current->get_cor_element(cor_size -1).base.x + 
+		current->get_cor_element(cor_size -1).longueur * 
+		cos(current->get_cor_element(cor_size -1).angle);
+	fin_c.y = current->get_cor_element(cor_size -1).base.y + 
+		current->get_cor_element(cor_size -1).longueur * 
+		sin(current->get_cor_element(cor_size -1).angle);
 
-    for(size_t i(0); i < corals.size() - 1; ++i){ //i indice du corail i en cours
-       for(size_t j(0); j < corals[i].get_cor_size(); ++j){ //j indice du segment j en cours du corail i en cours
+    for(size_t i(0); i < corals.size() - 1; ++i){ 
+       for(size_t j(0); j < corals[i].get_cor_size(); ++j){ 
 			S2d fin_j{};
-			fin_j.x = corals[i].get_cor_element(j).base.x + corals[i].get_cor_element(j).longueur * cos(corals[i].get_cor_element(j).angle);
-			fin_j.y = corals[i].get_cor_element(j).base.y + corals[i].get_cor_element(j).longueur * sin(corals[i].get_cor_element(j).angle);
-            if(do_intersect(current->get_cor_element(cor_size - 1).base, fin_c, corals[i].get_cor_element(j).base, fin_j, false)){
-                cout << message::segment_collision(current->get_cor_id(), (cor_size - 1), corals[i].get_cor_id(), j);
+			fin_j.x = corals[i].get_cor_element(j).base.x + 
+					corals[i].get_cor_element(j).longueur * 
+					cos(corals[i].get_cor_element(j).angle);
+					
+			fin_j.y = corals[i].get_cor_element(j).base.y + 
+					corals[i].get_cor_element(j).longueur * 
+					sin(corals[i].get_cor_element(j).angle);
+					
+            if(do_intersect(current->get_cor_element(cor_size - 1).base, 
+				fin_c, corals[i].get_cor_element(j).base, fin_j, false)){
+                cout << message::segment_collision(current->get_cor_id(), 
+					(cor_size - 1), corals[i].get_cor_id(), j);
                 exit(EXIT_FAILURE);
             }
        } 
     }
 }
 
-Corail* Simulation::new_coral(double x, double y, int age, unsigned int id, int status_cor, int dir_rot, int status_dev, int nb_seg){
+Corail* Simulation::new_coral(double x, double y, int age, unsigned int id, 
+						int status_cor, int dir_rot, int status_dev, int nb_seg){
     S2d pos{};
     pos.x = x;
     pos.y = y;
 
-    corals.emplace_back(pos, age, id, status_cor ? ALIVE : DEAD, dir_rot ? INVTRIGO : TRIGO, status_dev ? REPRO : EXTEND, nb_seg);
-
-	// more checks needed
+    corals.emplace_back(pos, age, id, status_cor ? ALIVE : DEAD, 
+					dir_rot ? INVTRIGO : TRIGO, status_dev ? REPRO : EXTEND, nb_seg);
+	
+	corals.back().center_corail();
+	corals.back().positive_age();
 
 	if(id_match(corals.back().get_cor_id())){
         cout << message::lifeform_duplicated_id(corals.back().get_cor_id());
