@@ -1,3 +1,6 @@
+// Talia Meyer
+// Noam Lévy
+
 #include <iostream>
 #include <cmath>
 #include <string>
