@@ -1,3 +1,6 @@
+// Talia Meyer
+// Noam Lévy
+
 #ifndef SIMULATION_H
 #define SIMULATION_H
 

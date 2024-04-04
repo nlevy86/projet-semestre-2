@@ -1,3 +1,6 @@
+// Talia Meyer
+// Noam Lévy
+
 #ifndef SHAPE_H
 #define SHAPE_H
 

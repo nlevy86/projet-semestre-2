@@ -1,3 +1,6 @@
+// Talia Meyer
+// Noam Lévy
+
 #ifndef LIFEFORM_H
 #define LIFEFORM_H
 
