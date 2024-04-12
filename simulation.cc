@@ -10,7 +10,20 @@
 using namespace std;
 	
 
+void Simulation::reinit(){
+	if (algae.size()>0){
+		algae.clear();
+	}
+	if (scavengers.size()>0){
+		scavengers.clear();
+	}
+	if (corals.size()>0){
+		corals.clear();
+	}
+}
+
 void Simulation::lecture(const string& nom_fichier) {
+	bool test = true;
     ifstream fichier(nom_fichier.c_str());
     Section section = Section::NONE;
     string buffer{};
@@ -30,7 +43,7 @@ void Simulation::lecture(const string& nom_fichier) {
                 double x(0), y(0);
                 int age = 0;
                 ligne >> x >> y >> age;
-                new_alga(x, y, age);
+                new_alga(x, y, age, test);
                 --nb;
             } else {
                 ligne >> nb;
@@ -45,7 +58,7 @@ void Simulation::lecture(const string& nom_fichier) {
 				ligne >> x >> y >> age >> id >> status_cor >> dir_rot >> status_dev 
 				>> nb_seg;
                 Corail *current = new_coral(x, y, age, id, status_cor, 
-														dir_rot, status_dev, nb_seg);               
+												dir_rot, status_dev, nb_seg, test);               
                 for(int i(0); i < nb_seg; ++i) {
                     getline(fichier, buffer);                    
                     if (buffer[0] == '#' or buffer.empty()){
@@ -55,13 +68,13 @@ void Simulation::lecture(const string& nom_fichier) {
                     double angle(0), len(0);
                     ligne_seg >> angle >> len;
 
-                    new_segment(angle, len, current);
+                    new_segment(angle, len, current, test);
                 }
-				corals.back().corail_in();
-				corals.back().segment_length_in();
-				corals.back().segment_angle_in();
-				corals.back().segment_not_superpo(false);
-				corals.back().segment_not_coll_him(false);
+				test = test and corals.back().corail_in();
+				test = test and corals.back().segment_length_in();
+				test = test and corals.back().segment_angle_in();
+				test = test and corals.back().segment_not_superpo(false);
+				test = test and corals.back().segment_not_coll_him(false);
 				--nb;
             } else {
                 ligne >> nb;
@@ -76,7 +89,7 @@ void Simulation::lecture(const string& nom_fichier) {
                 if(status_sca){
                     ligne >> target_id;    
                 }
-                new_sca(x, y, age, rayon, status_sca, target_id);               
+                new_sca(x, y, age, rayon, status_sca, target_id, test);               
                 --nb;
             }
             break;
@@ -85,42 +98,45 @@ void Simulation::lecture(const string& nom_fichier) {
         }
     }
     fichier.close();
+    if (not test){
+		reinit();
+	}
 }
 
 
 
 
-void Simulation::new_alga(double x, double y, int age){
+void Simulation::new_alga(double x, double y, int age, bool& test){
     S2d pos{};
     pos.x = x;
     pos.y = y;
     algae.emplace_back(pos, age);
-    algae.back().lifeform_in();
-    algae.back().positive_age();
+    test = test and algae.back().lifeform_in();
+    test = test and algae.back().positive_age();
     
 }
 
-void Simulation::new_sca(double x, double y, int age,
-	double rayon, int status_sca, int target_id){
+void Simulation::new_sca(double x, double y, int age,double rayon,
+	int status_sca, int target_id, bool& test){
     S2d pos{};
     pos.x = x;
     pos.y = y;
     scavengers.emplace_back(pos, age, rayon, status_sca ? EATING : FREE, target_id);
-	scavengers.back().lifeform_in();
-    scavengers.back().positive_age();
-    scavengers.back().ray_in();
+	test = test and scavengers.back().lifeform_in();
+    test = test and scavengers.back().positive_age();
+    test = test and scavengers.back().ray_in();
 
     if(scavengers.back().get_id_cible() >= 0){
         unsigned int pos_target_id(scavengers.back().get_id_cible()); //implicit cast
-        if(!id_match(pos_target_id)){
+        if(!id_match(pos_target_id, test)){
             cout << message::lifeform_invalid_id(pos_target_id);
-            exit(EXIT_FAILURE);
+            test = false;
         }
     }
 
 }
 
-void Simulation::new_segment(double age, double length, Corail *current){
+void Simulation::new_segment(double age, double length, Corail *current, bool& test){
     current->add_segment(age, length);
     S2d fin_c{};
 	size_t cor_size(current->get_cor_size());
@@ -146,14 +162,14 @@ void Simulation::new_segment(double age, double length, Corail *current){
 				fin_c, corals[i].get_cor_element(j).base, fin_j, false)){
                 cout << message::segment_collision(current->get_cor_id(), 
 					(cor_size - 1), corals[i].get_cor_id(), j);
-                exit(EXIT_FAILURE);
+                test = false;
             }
        } 
     }
 }
 
 Corail* Simulation::new_coral(double x, double y, int age, unsigned int id, 
-						int status_cor, int dir_rot, int status_dev, int nb_seg){
+				int status_cor, int dir_rot, int status_dev, int nb_seg, bool& test){
     S2d pos{};
     pos.x = x;
     pos.y = y;
@@ -161,18 +177,18 @@ Corail* Simulation::new_coral(double x, double y, int age, unsigned int id,
     corals.emplace_back(pos, age, id, status_cor ? ALIVE : DEAD, 
 					dir_rot ? INVTRIGO : TRIGO, status_dev ? REPRO : EXTEND, nb_seg);
 	
-	corals.back().lifeform_in();
-	corals.back().positive_age();
+	test = test and corals.back().lifeform_in();
+	test = test and corals.back().positive_age();
 
-	if(id_match(corals.back().get_cor_id())){
+	if(id_match(corals.back().get_cor_id(), test)){
         cout << message::lifeform_duplicated_id(corals.back().get_cor_id());
-        exit(EXIT_FAILURE);
+        test = false;
     }
     return &(corals.back());
 }
 
 
-bool Simulation::id_match(unsigned int tested_id){
+bool Simulation::id_match(unsigned int tested_id, bool& test){
     for(size_t i{0}; i < corals.size() - 1; ++i){
         if(corals[i].get_cor_id() == tested_id){
             return true;
