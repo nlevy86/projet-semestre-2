@@ -8,61 +8,21 @@
 
 using namespace std;
 
-const bool Algue::lifeform_in() {
-	if (pos_algue.x < 1 or pos_algue.x > dmax-1 or  pos_algue.y < 1 or
-		pos_algue.y > dmax-1){
-		cout << message::lifeform_center_outside(pos_algue.x, pos_algue.y);
-		exit(EXIT_FAILURE);
+const bool Lifeform::lifeform_in() {
+	if (pos_lifeform.x < 1 or pos_lifeform.x > dmax-1 or  pos_lifeform.y < 1 or
+		pos_lifeform.y > dmax-1){
+		cout << message::lifeform_center_outside(pos_lifeform.x, pos_lifeform.y);
 		return false;
 	}
 	return true;
 }
 
-const bool Sca::lifeform_in(){
-	if (pos_sca.x < 1 or pos_sca.x > dmax-1 or 
-		pos_sca.y < 1 or pos_sca.y > dmax-1){
-		cout << message::lifeform_center_outside(pos_sca.x, pos_sca.y);
-		exit(EXIT_FAILURE);
-		return false;
-	}
-	return true;
-}
-
-const bool Algue::positive_age(){
-	if (age_algue>0){
+const bool Lifeform::positive_age(){
+	if (age_lifeform>0){
 		return true;
 	}
-	cout << message::lifeform_age(age_algue);
-	exit(EXIT_FAILURE);
+	cout << message::lifeform_age(age_lifeform);
 	return false;
-}
-
-const bool Corail::positive_age(){
-	if (age_corail>0){
-		return true;
-	}
-	cout << message::lifeform_age(age_corail);
-	exit(EXIT_FAILURE);
-	return false;
-}
-
-const bool Sca::positive_age(){
-	if (age_sca>0){
-		return true;
-	}
-	cout << message::lifeform_age(age_sca);
-	exit(EXIT_FAILURE);
-	return false;
-}
-
-const bool Corail::center_corail(){
-	if (pos_cor.x < 1 or pos_cor.x > dmax-1 or 
-		pos_cor.y < 1 or pos_cor.y > dmax-1){
-		cout << message::lifeform_center_outside(pos_cor.x, pos_cor.y);
-		exit(EXIT_FAILURE);
-		return false;
-	}
-	return true;
 }
 			
 const bool Corail::corail_in(){
@@ -134,8 +94,8 @@ const bool Corail::segment_not_coll_him(bool is_epsil_zero){
 }
 
 const void Corail::add_segment(double angle, double length) {
-	double x = pos_cor.x;
-	double y = pos_cor.y;
+	double x = pos_lifeform.x;
+	double y = pos_lifeform.y;
 
 	if(!cor.empty()) {
 		Segment tail = cor.back();

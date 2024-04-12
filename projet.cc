@@ -16,7 +16,6 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 	sim.lecture(string{argv[1]});
-	
 	cout << message::success();
 	exit(EXIT_SUCCESS);
 	

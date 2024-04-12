@@ -10,29 +10,35 @@
 #include "message.h"
 #include "constantes.h"
 
-class Algue{
-
+class Lifeform{
+	
 public:
-	Algue(S2d _pos_algue, int _age_algue) : pos_algue(_pos_algue), 	
-															age_algue(_age_algue) {}
+	Lifeform(S2d _pos_lifeform, int _age_lifeform) : 
+	pos_lifeform(_pos_lifeform), age_lifeform(_age_lifeform) {}
 	const bool lifeform_in();
 	const bool positive_age();
-private:
-	S2d pos_algue;
-	int age_algue;
+protected:
+	S2d pos_lifeform;
+	int age_lifeform;
 };
 
-class Corail{
+
+class Algue: public Lifeform{
 public:
-	Corail(S2d _pos_cor, int _age_corail, unsigned int _id, Status_cor _status_corail, 
-			Dir_rot_cor _dir_rot_corail, Status_dev _status_develo, int _nb_segment) : 
-			pos_cor(_pos_cor), age_corail(_age_corail), id(_id), 
+	Algue(S2d _pos_lifeform, int _age_lifeform) : 
+	Lifeform(_pos_lifeform, _age_lifeform) {}
+};
+
+class Corail: public Lifeform{
+public:
+	Corail(S2d _pos_lifeform, int _age_lifeform, unsigned int _id, 
+		Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, 
+		Status_dev _status_develo, int _nb_segment) : 
+			Lifeform(_pos_lifeform, _age_lifeform), id(_id), 
 			status_corail(_status_corail), dir_rot_corail(_dir_rot_corail), 
 			status_develo(_status_develo), nb_segment(_nb_segment) {}
-
-	const bool center_corail();
+			
 	const bool corail_in();
-	const bool positive_age();
 	const bool segment_length_in();
 	const bool segment_angle_in();
 	const bool segment_not_superpo(bool is_epsil_zero);
@@ -42,8 +48,6 @@ public:
 	const size_t get_cor_size();
 	const unsigned int get_cor_id();
 private:
-	S2d pos_cor;
-	int age_corail;
 	unsigned int id;
 	Status_cor status_corail;
 	Dir_rot_cor dir_rot_corail;
@@ -53,21 +57,17 @@ private:
 	
 };
 
-class Sca {
+class Sca: public Lifeform {
 
 public:
-	Sca(S2d _pos_sca, int _age_sca, double _ray_sca, Status_sca _status_scaven, 
-															int _cor_id_cible = -1 ) : 
-			pos_sca(_pos_sca), age_sca(_age_sca), ray_sca(_ray_sca), 
-						status_scaven(_status_scaven), cor_id_cible(_cor_id_cible) {}
+	Sca(S2d _pos_lifeform, int _age_lifeform, double _ray_sca,
+		Status_sca _status_scaven, int _cor_id_cible = -1 ) : 
+		Lifeform(_pos_lifeform, _age_lifeform), ray_sca(_ray_sca), 
+		status_scaven(_status_scaven),cor_id_cible(_cor_id_cible) {}
 
-	const bool lifeform_in(); 
-	const bool positive_age();
 	const bool ray_in();
 	const int get_id_cible();
 private:
-	S2d pos_sca;
-	int age_sca;
 	double ray_sca;
 	Status_sca status_scaven;
 	int cor_id_cible;

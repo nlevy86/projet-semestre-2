@@ -161,7 +161,7 @@ Corail* Simulation::new_coral(double x, double y, int age, unsigned int id,
     corals.emplace_back(pos, age, id, status_cor ? ALIVE : DEAD, 
 					dir_rot ? INVTRIGO : TRIGO, status_dev ? REPRO : EXTEND, nb_seg);
 	
-	corals.back().center_corail();
+	corals.back().lifeform_in();
 	corals.back().positive_age();
 
 	if(id_match(corals.back().get_cor_id())){
