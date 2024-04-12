@@ -7,7 +7,7 @@
 #include <gtkmm/drawingarea.h>
 #include <cairomm/context.h>
 #include <cmath>
-#include "constante.h"
+#include "constantes.h"
 
 struct Frame {
 	double xMin, xMax, yMin, yMax, asp; 
