@@ -1,12 +1,14 @@
 #ifndef GTKMM_GUI_H
 #define GTKMM_GUI_H
 
+#include <gtkmm.h>
+#include <gtkmm/application.h>
+#include <cairomm/context.H>
 #include <gtkmm/window.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 #include <gtkmm/drawingarea.h>
-#include <gtkmm.h>
 #include "simulation.h"
 #include "constante.h"
 #include "graphic.h"
