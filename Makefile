@@ -2,8 +2,8 @@
 
 CXX     = g++
 CXXFLAGS = -g -Wall -std=c++17
-CXXFILES = projet.cc shape.cc message.cc lifeform.cc simulation.cc
-OFILES = projet.o shape.o message.o lifeform.o simulation.o
+CXXFILES = projet.cc shape.cc message.cc lifeform.cc simulation.cc gui.cc graphic.cc
+OFILES = projet.o shape.o message.o lifeform.o simulation.o gui.o graphic.o
 
 # Definition de la premiere regle
 
@@ -26,7 +26,12 @@ lifeform.o: lifeform.cc lifeform.h message.h shape.h
 
 simulation.o: simulation.cc simulation.h lifeform.h message.h shape.h
 	$(CXX) $(CXXFLAGS) -c simulation.cc -o simulation.o
-
+	
+gui.o: gui.cc gui.h simulation.h constantes.h graphic.h
+	$(CXX) $(CXXFLAGS) -c gui.cc -o gui.o
+	
+graphic.o: graphic.cc graphic.h constantes.h
+	$(CXX) $(CXXFLAGS) -c graphic.cc -o graphic.o
 # Definitions de cibles particulieres
 
 depend:
@@ -43,8 +48,14 @@ clean:
 
 #
 # -- Regles de dependances generees automatiquement
-projet.o: projet.cc
+
+projet.o: projet.cc simulation.h lifeform.h message.h constantes.h \
+ shape.h
 shape.o: shape.cc shape.h
 message.o: message.cc message.h
-lifeform.o: lifeform.cc lifeform.h message.h shape.h constantes.h
-simulation.o: simulation.cc simulation.h lifeform.h message.h shape.h constantes.h
+lifeform.o: lifeform.cc lifeform.h message.h constantes.h shape.h
+simulation.o: simulation.cc simulation.h lifeform.h message.h \
+ constantes.h shape.h
+gui.o: gui.cc gui.h simulation.h lifeform.h message.h constantes.h \
+ shape.h graphic.h
+graphic.o: graphic.cc graphic.h constantes.h shape.h
