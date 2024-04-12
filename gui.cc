@@ -1,8 +1,4 @@
-#include <gtkmm/application.h>
 #include "gui.h"
-#include <cairomm/context.h>
-#include <gtkmm/label.h>
-#include <gtkmm.h>
 #include <iostream>
 #include <string>
 
