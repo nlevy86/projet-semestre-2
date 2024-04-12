@@ -10,7 +10,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/drawingarea.h>
 #include "simulation.h"
-#include "constante.h"
+#include "constantes.h"
 #include "graphic.h"
 
 int gui(int argc, char** argv, Simulation simulation);
