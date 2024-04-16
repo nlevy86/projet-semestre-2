@@ -1,8 +1,8 @@
 OUT = projet
 CXX = g++
-CXXFLAGS = -Wall -std=c++17
-LINKING = `pkg-config --cflags gtkmm-4.0`
-LDLIBS = `pkg-config --libs gtkmm-4.0`
+CXXFLAGS = -Wall -std=c++17 `pkg-config gtkmm-4.0 --cflags --libs`
+LINKING =
+LDLIBS = 
 CXXFILES = graphic.cc shape.cc lifeform.cc simulation.cc projet.cc gui.cc \
  message.cc
 OFILES = $(CXXFILES:.cc=.o)
