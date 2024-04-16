@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include "graphic.h"
 
 constexpr double epsil_zero(0.5) ;
 constexpr double epsil_1(0.0000000001);
@@ -22,8 +23,7 @@ struct Segment{
 	double longueur;
 
 	// Obligatoire pour pouvoir faire emplace_back
-	Segment(const S2d& _base, double _angle, double _longueur)
-	: base(_base), angle(_angle), longueur(_longueur) {}
+	Segment(const S2d& _base, double _angle, double _longueur);
 };
 
 bool superpo_commun(Segment segment_1, Segment segment_2, bool is_epsil_zero);

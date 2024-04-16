@@ -6,9 +6,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <random>
 
 using namespace std;
-	
+
+static default_random_engine e;
 
 void Simulation::reinit(){
 	if (algae.size()>0){
@@ -189,10 +191,35 @@ Corail* Simulation::new_coral(double x, double y, int age, unsigned int id,
 
 
 bool Simulation::id_match(unsigned int tested_id, bool& test){
-    for(size_t i{0}; i < corals.size() - 1; ++i){
+    for(size_t i(0); i < corals.size() - 1; ++i){
         if(corals[i].get_cor_id() == tested_id){
             return true;
         }
     }
     return false;
 }
+
+void Simulation::maj(bool creation_algue){
+	for (size_t i(0); i < algae.size(); ++i){
+		if (algae[i].maj_algue()){
+			Algue alga(algae[i]);
+			algae[i] = algae.back();
+			algae.back() = alga;
+			algae.pop_back();
+			--i;
+		}
+	}
+	if (creation_algue){
+		e.seed(1);
+		double p(alg_birth_rate);
+		bernoulli_distribution b(p);
+		if (b(e)){
+			uniform_int_distribution<unsigned> u(1,dmax-1);
+			bool test (true);
+			new_alga(u(e), u(e), 0, test); // vérifier age
+		}
+	}
+}
+
+
+

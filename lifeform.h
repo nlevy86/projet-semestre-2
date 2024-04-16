@@ -13,8 +13,7 @@
 class Lifeform{
 	
 public:
-	Lifeform(S2d _pos_lifeform, int _age_lifeform) : 
-	pos_lifeform(_pos_lifeform), age_lifeform(_age_lifeform) {}
+	Lifeform(S2d _pos_lifeform, int _age_lifeform);
 	const bool lifeform_in();
 	const bool positive_age();
 protected:
@@ -25,19 +24,15 @@ protected:
 
 class Algue: public Lifeform{
 public:
-	Algue(S2d _pos_lifeform, int _age_lifeform) : 
-	Lifeform(_pos_lifeform, _age_lifeform) {}
+	Algue(S2d _pos_lifeform, int _age_lifeform);
+	bool maj_algue();
 };
 
 class Corail: public Lifeform{
 public:
 	Corail(S2d _pos_lifeform, int _age_lifeform, unsigned int _id, 
-		Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, 
-		Status_dev _status_develo, int _nb_segment) : 
-			Lifeform(_pos_lifeform, _age_lifeform), id(_id), 
-			status_corail(_status_corail), dir_rot_corail(_dir_rot_corail), 
-			status_develo(_status_develo), nb_segment(_nb_segment) {}
-			
+			Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, 
+			Status_dev _status_develo, int _nb_segment);
 	const bool corail_in();
 	const bool segment_length_in();
 	const bool segment_angle_in();
@@ -61,9 +56,7 @@ class Sca: public Lifeform {
 
 public:
 	Sca(S2d _pos_lifeform, int _age_lifeform, double _ray_sca,
-		Status_sca _status_scaven, int _cor_id_cible = -1 ) : 
-		Lifeform(_pos_lifeform, _age_lifeform), ray_sca(_ray_sca), 
-		status_scaven(_status_scaven),cor_id_cible(_cor_id_cible) {}
+		Status_sca _status_scaven, int _cor_id_cible = -1 );
 
 	const bool ray_in();
 	const int get_id_cible();

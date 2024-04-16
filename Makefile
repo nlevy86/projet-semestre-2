@@ -1,41 +1,13 @@
-# Definitions de macros
-
-CXX     = g++
-CXXFLAGS = -g -Wall -std=c++17
+OUT = projet
+CXX = g++
+CXXFLAGS = -Wall -std=c++17
 LINKING = `pkg-config --cflags gtkmm-4.0`
 LDLIBS = `pkg-config --libs gtkmm-4.0`
-CXXFILES = projet.cc shape.cc message.cc lifeform.cc simulation.cc gui.cc graphic.cc
-OFILES = projet.o shape.o message.o lifeform.o simulation.o gui.o graphic.o
+CXXFILES = graphic.cc shape.cc lifeform.cc simulation.cc projet.cc gui.cc \
+ message.cc
+OFILES = $(CXXFILES:.cc=.o)
 
-# Definition de la premiere regle
-
-all: projet 
-
-projet: $(OFILES)
-	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
-	
-projet.o: projet.cc simulation.h gui.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-	
-shape.o: shape.cc shape.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
-
-message.o: message.cc message.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-lifeform.o: lifeform.cc lifeform.h message.h shape.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
-
-simulation.o: simulation.cc simulation.h lifeform.h message.h shape.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
-	
-gui.o: gui.cc gui.h simulation.h graphic.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-	
-graphic.o: graphic.cc graphic.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-
-# Definitions de cibles particulieres
+all: $(OUT)
 
 depend:
 	@echo " *** MISE A JOUR DES DEPENDANCES ***"
@@ -47,18 +19,46 @@ depend:
 
 clean:
 	@echo " *** EFFACE MODULES OBJET ET EXECUTABLE ***"
-	@/bin/rm -f *.o *.x *.cc~ *.h~ projet 
+	@/bin/rm -f *.o *.x *.cc~ *.h~ $(OUT)
 
-#
-# -- Regles de dependances generees automatiquement
+shape.o: shape.cc shape.h graphic.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
 
-projet.o: projet.cc simulation.h lifeform.h message.h constantes.h \
- shape.h
-shape.o: shape.cc shape.h
 message.o: message.cc message.h
-lifeform.o: lifeform.cc lifeform.h message.h constantes.h shape.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+lifeform.o: lifeform.cc lifeform.h message.h constantes.h shape.h \
+graphic.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+
 simulation.o: simulation.cc simulation.h lifeform.h message.h \
- constantes.h shape.h
+constantes.h shape.h graphic.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+
+graphic.o: graphic.cc graphic.h graphic_gui.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 
+
+gui.o: gui.cc graphic.h graphic_gui.h gui.h simulation.h lifeform.h \
+ shape.h constantes.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 
+
+projet.o: projet.cc gui.h simulation.h lifeform.h message.h shape.h \
+graphic.h constantes.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 
+
+$(OUT): $(OFILES)
+	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
+
+
+# DO NOT DELETE THIS LINE
+graphic.o: graphic.cc graphic.h graphic_gui.h
+shape.o: shape.cc shape.h graphic.h graphic_gui.h
+lifeform.o: lifeform.cc lifeform.h message.h constantes.h shape.h \
+ graphic.h graphic_gui.h
+simulation.o: simulation.cc simulation.h lifeform.h message.h \
+ constantes.h shape.h graphic.h graphic_gui.h
+projet.o: projet.cc gui.h simulation.h lifeform.h message.h constantes.h \
+ shape.h graphic.h graphic_gui.h
 gui.o: gui.cc gui.h simulation.h lifeform.h message.h constantes.h \
- shape.h graphic.h
-graphic.o: graphic.cc graphic.h
+ shape.h graphic.h graphic_gui.h
+message.o: message.cc message.h

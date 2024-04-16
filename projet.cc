@@ -2,7 +2,7 @@
 // Noam Lévy
 
 #include <iostream>
-#include "simulation.h"
+#include "gui.h"
 
 using namespace std;
 

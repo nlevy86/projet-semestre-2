@@ -8,6 +8,12 @@
 
 using namespace std;
 
+Segment::Segment(const S2d& _base, double _angle, double _longueur){
+	base(_base);
+	angle(_angle);
+	longueur(_longueur)
+}
+
 double ecart_angulaire(Segment segment_1, Segment segment_2){
 	double ecart(segment_1.angle + (M_PI - segment_2.angle));
 	if (ecart < -M_PI){
