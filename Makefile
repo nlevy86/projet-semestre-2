@@ -22,18 +22,18 @@ clean:
 	@/bin/rm -f *.o *.x *.cc~ *.h~ $(OUT)
 
 shape.o: shape.cc shape.h graphic.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 
 
 message.o: message.cc message.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@
 
 lifeform.o: lifeform.cc lifeform.h message.h constantes.h shape.h \
 graphic.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 
 
 simulation.o: simulation.cc simulation.h lifeform.h message.h \
 constantes.h shape.h graphic.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 
 
 graphic.o: graphic.cc graphic.h graphic_gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ 

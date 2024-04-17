@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "gui.h"
+#include <gtkmm/application.h>
 
 using namespace std;
 
@@ -17,8 +18,6 @@ int main(int argc, char *argv[]){
 	}
 	sim.reinit();
 	sim.lecture(string{argv[1]});
-	cout << message::success();
-	exit(EXIT_SUCCESS);
-	
-	return 0;
+	auto app = Gtk::Application::create();
+	return app->make_window_and_run<MyWindow>(1, argv);
 }

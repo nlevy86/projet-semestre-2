@@ -8,6 +8,12 @@
 #include <iostream>
 #include "simulation.h"
 #include "graphic_gui.h"
+#include <gtkmm/window.h>
+
+class MyWindow : public Gtk::Window {
+public:
+	MyWindow();
+};
 
 
 
