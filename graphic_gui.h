@@ -6,4 +6,4 @@
 
 void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr);
 
-#endif // GTKMM_EXAMPLE_GRAPHIC_GUI_H
+#endif
