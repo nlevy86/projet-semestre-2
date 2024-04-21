@@ -16,6 +16,8 @@ public:
 	Lifeform(S2d _pos_lifeform, int _age_lifeform);
 	const bool lifeform_in();
 	const bool positive_age();
+	const S2d get_lifeform_pos();
+	const int get_lifeform_age();
 protected:
 	S2d pos_lifeform;
 	int age_lifeform;

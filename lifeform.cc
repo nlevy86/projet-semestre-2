@@ -47,7 +47,15 @@ const bool Lifeform::positive_age(){
 	cout << message::lifeform_age(age_lifeform);
 	return false;
 }
-			
+
+const S2d Lifeform::get_lifeform_pos(){
+	return pos_lifeform;
+}		
+
+const int Lifeform::get_lifeform_age(){
+	return age_lifeform;
+}
+
 const bool Corail::corail_in(){
 	for (int i(0); i<= nb_segment-1; ++i){
 		S2d fin;

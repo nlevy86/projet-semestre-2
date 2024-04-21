@@ -103,6 +103,23 @@ void Simulation::lecture(const string& nom_fichier) {
 
 }
 
+void Simulation::file_writing(const string& filename){
+    ofstream file(filename);
+
+    if (file.fail()){
+        exit 1;
+    }
+
+    file << "# Etat courant de la simulation :" << endl;
+    file << algae.size() << endl;
+
+    for (size_t i(0); i < algae.size(); ++i) {
+        file << "\t" << algae[i].get_lifeform_pos().x << " " << algae[i].get_lifeform_pos().y << " " << algae[i].get_lifeform_age() << endl;
+    }
+
+    file << endl;
+    file << corals.size() << endl;
+}
 
 
 
