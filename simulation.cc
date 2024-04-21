@@ -145,6 +145,8 @@ void Simulation::file_writing(const string& filename){
         << " " << scavengers[i].get_ray() << " " << scavengers[i].get_status() 
         << " " << scavengers[i].get_id_cible << endl;
     }
+
+    file.close();
 }
 
 
