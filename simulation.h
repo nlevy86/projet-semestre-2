@@ -13,6 +13,9 @@ class Simulation {
 public:
 	void reinit();
     void lecture(const std::string& nom_fichier); 
+    const std::string get_size_algae();
+    const std::string get_size_corals();
+    const std::string get_size_scavengers();
     
 private:
 

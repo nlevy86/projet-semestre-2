@@ -100,9 +100,7 @@ void Simulation::lecture(const string& nom_fichier) {
         }
     }
     fichier.close();
-    if (not test){
-		reinit();
-	}
+
 }
 
 
@@ -114,6 +112,7 @@ void Simulation::new_alga(double x, double y, int age, bool& test){
     pos.y = y;
     algae.emplace_back(pos, age);
     test = test and algae.back().lifeform_in();
+    cout<<test;
     test = test and algae.back().positive_age();
     
 }
@@ -221,5 +220,14 @@ void Simulation::maj(bool creation_algue){
 	}
 }
 
+const string Simulation::get_size_algae(){
+	return to_string(algae.size());
+}
+const string Simulation::get_size_corals(){
+	return to_string(corals.size());
+}
 
+const string Simulation::get_size_scavengers(){
+	return to_string(scavengers.size());
+}
 
