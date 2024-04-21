@@ -44,6 +44,9 @@ public:
 	const Segment get_cor_element(int i);
 	const size_t get_cor_size();
 	const unsigned int get_cor_id();
+	const int get_cor_status();
+	const int get_cor_dir();
+	const int get_cor_dev();
 private:
 	unsigned int id;
 	Status_cor status_corail;
@@ -62,6 +65,8 @@ public:
 
 	const bool ray_in();
 	const int get_id_cible();
+	const double get_ray();
+	const int get_status();
 private:
 	double ray_sca;
 	Status_sca status_scaven;

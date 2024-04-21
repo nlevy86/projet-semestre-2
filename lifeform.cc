@@ -148,6 +148,18 @@ const unsigned int Corail::get_cor_id(){
 	return id;
 }
 
+const int Corail::get_cor_status(){
+	return (status_corail == Status_cor::DEAD) ? 0 : 1;
+}
+
+const int Corail::get_cor_dir(){
+	return (dir_rot_corail == Dir_rot_cor::TRIGO) ? 0 : 1;
+}
+
+const int Corail::get_cor_dev(){
+	return (status_develo == Status_dev::EXTEND) ? 0 : 1;
+}
+
 
 const bool Sca::ray_in(){
 	if (ray_sca>=r_sca and ray_sca<r_sca_repro){
@@ -160,6 +172,14 @@ const bool Sca::ray_in(){
 
 const int Sca::get_id_cible(){
 	return cor_id_cible;
+}
+
+const double Sca::get_ray(){
+	return ray_sca;
+}
+
+const int Sca::get_status(){
+	return (status_scaven == Status_sca::FREE) ? 0 : 1;
 }
 
 bool Algue::maj_algue(){
