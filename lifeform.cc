@@ -163,10 +163,8 @@ const int Corail::get_cor_dev(){
 
 const bool Sca::ray_in(){
 	if (ray_sca>=r_sca and ray_sca<r_sca_repro){
-		cout<<"salut";
 		return true;
 	}
-	cout<<"bonjour";
 	cout << message::scavenger_radius_outside(ray_sca);
 	return false;
 }

@@ -29,19 +29,25 @@ void Simulation::lecture(const string& nom_fichier) {
     ifstream fichier(nom_fichier.c_str());
     Section section = Section::NONE;
     string buffer{};
-    int nb{};
+    int nb;
     while(getline(fichier, buffer)){
         if (buffer[0] == '#' or buffer.size() < 1){
 			continue;
         }
+                
+        if (buffer.find_first_not_of(' ') == std::string::npos) {
+			continue;
+        }
+        
         istringstream ligne(buffer);
+
 		switch(section) {
         case NONE:
             ligne >> nb;
             section = Section::ALGA;
             break; 
         case ALGA:
-			cout<<1;
+			//cout<<1;
             if(nb > 0){
                 double x(0), y(0);
                 int age = 0;
