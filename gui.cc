@@ -75,6 +75,16 @@ void Gui::on_button_clicked_exit(){
 }
 
 void Gui::on_button_clicked_open(){
+	Simulation sim;
+	string fichier;
+	cin>>fichier;
+	sim.lecture(fichier);
+	string size_algae(sim.get_size_algae());
+	string size_corals(sim.get_size_corals());
+	string size_scavengers(sim.get_size_scavengers());
+	label_nb_algue.set_text(size_algae);
+	label_nb_cor.set_text(size_corals);
+	label_nb_sca.set_text(size_scavengers);
 }
 
 void Gui::on_button_clicked_save(){
