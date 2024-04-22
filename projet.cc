@@ -17,7 +17,6 @@ int main(int argc, char *argv[]){
 	}
 	sim.reinit();
 	sim.lecture(string{argv[1]});
-	
 	std::string size_algae(sim.get_size_algae());
 	std::string size_corals(sim.get_size_corals());
 	std::string size_scavengers(sim.get_size_scavengers());

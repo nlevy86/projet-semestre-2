@@ -41,6 +41,7 @@ void Simulation::lecture(const string& nom_fichier) {
             section = Section::ALGA;
             break; 
         case ALGA:
+			cout<<1;
             if(nb > 0){
                 double x(0), y(0);
                 int age = 0;
@@ -100,6 +101,9 @@ void Simulation::lecture(const string& nom_fichier) {
         }
     }
     fichier.close();
+    if (not test){
+    	reinit();
+    }
 
 }
 
@@ -107,7 +111,7 @@ void Simulation::file_writing(const string& filename){
     ofstream file(filename);
 
     if (file.fail()){
-        EXIT(1);
+        exit(1);
     }
 
     file << "# Etat courant de la simulation :" << endl;
@@ -129,7 +133,7 @@ void Simulation::file_writing(const string& filename){
         << " " << corals[i].get_cor_dir() << " " << corals[i].get_cor_dev() 
         << " " << corals[i].get_cor_size() << endl;
 
-        for (size_t j(0); j < corals[i].get_cor_size; ++j) {
+        for (size_t j(0); j < corals[i].get_cor_size(); ++j) {
             file << "\t\t" << corals[i].get_cor_element(j).angle << " "
             << corals[i].get_cor_element(j).longueur << endl;
         }
@@ -143,7 +147,7 @@ void Simulation::file_writing(const string& filename){
         file << scavengers[i].get_lifeform_pos().x << " " 
         <<scavengers[i].get_lifeform_pos().y << " " <<scavengers[i].get_lifeform_age()
         << " " << scavengers[i].get_ray() << " " << scavengers[i].get_status() 
-        << " " << scavengers[i].get_id_cible << endl;
+        << " " << scavengers[i].get_id_cible() << endl;
     }
 
     file.close();
@@ -157,7 +161,6 @@ void Simulation::new_alga(double x, double y, int age, bool& test){
     pos.y = y;
     algae.emplace_back(pos, age);
     test = test and algae.back().lifeform_in();
-    cout<<test;
     test = test and algae.back().positive_age();
     
 }
