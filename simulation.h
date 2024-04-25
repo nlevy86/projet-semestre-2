@@ -6,6 +6,10 @@
 
 #include <string>
 #include "lifeform.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <random>
 
 enum Section { ALGA, CORAL, SCAVENGER, NONE };
 
@@ -13,10 +17,12 @@ class Simulation {
 public:
 	void reinit();
     void lecture(const std::string& nom_fichier);
-    void file_writing(const std::string& filename);
+    void file_writing(std::string filename);
     const std::string get_size_algae();
     const std::string get_size_corals();
     const std::string get_size_scavengers();
+    void maj(bool creation_algue);
+    const void dessin(int width, int height);
     
 private:
 
@@ -32,7 +38,6 @@ private:
 				int target_id, bool& test);
 	void new_segment(double angle, double length, Corail *current, bool& test);
     bool id_match(unsigned int tested_id, bool& test);
-    void maj(bool creation_algue);
 };
 
 #endif

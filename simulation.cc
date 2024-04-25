@@ -3,10 +3,6 @@
 
 #include "simulation.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <random>
 
 using namespace std;
 
@@ -26,6 +22,7 @@ void Simulation::reinit(){
 
 void Simulation::lecture(const string& nom_fichier) {
 	bool test = true;
+	e.seed(1);
     ifstream fichier(nom_fichier.c_str());
     Section section = Section::NONE;
     string buffer{};
@@ -47,7 +44,6 @@ void Simulation::lecture(const string& nom_fichier) {
             section = Section::ALGA;
             break; 
         case ALGA:
-			//cout<<1;
             if(nb > 0){
                 double x(0), y(0);
                 int age = 0;
@@ -113,13 +109,10 @@ void Simulation::lecture(const string& nom_fichier) {
 
 }
 
-void Simulation::file_writing(const string& filename){
-    ofstream file(filename);
+void Simulation::file_writing(string filename){
 
-    if (file.fail()){
-        exit(1);
-    }
-
+	ofstream file;
+	file.open(filename, ofstream::trunc);
     file << "# Etat courant de la simulation :" << endl;
     file << algae.size() << endl;
 
@@ -263,13 +256,12 @@ void Simulation::maj(bool creation_algue){
 		}
 	}
 	if (creation_algue){
-		e.seed(1);
 		double p(alg_birth_rate);
 		bernoulli_distribution b(p);
 		if (b(e)){
 			uniform_int_distribution<unsigned> u(1,dmax-1);
 			bool test (true);
-			new_alga(u(e), u(e), 0, test); // vérifier age
+			new_alga(u(e), u(e), 1, test);
 		}
 	}
 }
@@ -285,3 +277,22 @@ const string Simulation::get_size_scavengers(){
 	return to_string(scavengers.size());
 }
 
+const void Simulation::dessin(int width, int height){
+	for (size_t i(0); i<algae.size(); ++i){
+		circle(algae[i].get_lifeform_pos().x,algae[i].get_lifeform_pos().y 
+					, r_alg, 0, 1, 0);
+	}
+	for (size_t i(0); i<scavengers.size(); ++i){
+		circle(scavengers[i].get_lifeform_pos().x, 
+				scavengers[i].get_lifeform_pos().y, scavengers[i].get_ray(), 1, 0, 0);
+	}
+	for (size_t i(0); i<corals.size(); ++i){
+		square(corals[i].get_lifeform_pos().x, corals[i].get_lifeform_pos().y);
+		for (size_t j(0); j<corals[i].get_cor_size(); ++j){
+			draw_line(corals[i].get_cor_element(j).base.x, 
+			corals[i].get_cor_element(j).base.y, corals[i].get_cor_element(j).longueur, 
+			corals[i].get_cor_element(j).angle, 0, 0, 1);
+			
+		}
+	}
+}

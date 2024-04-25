@@ -6,15 +6,12 @@
 
 
 #include <iostream>
+#include <cmath>
 #include "graphic_gui.h"
 #include <gtkmm/drawingarea.h>
 
-class Graphic : public Gtk::DrawingArea
-{
-public:
-	Graphic();
-protected:
-	void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
-};
-
+void draw_frame(int width, int height);
+void draw_line(double x, double y, double l, double a, double r, double g, double b);
+void draw_arc(double x, double y, double ray, double start, double stop, double r, 
+																double g, double b);
 #endif

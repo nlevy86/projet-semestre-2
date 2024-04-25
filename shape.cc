@@ -2,7 +2,6 @@
 // Noam Lévy
 
 #include <iostream>
-#include <cmath>
 #include <string>
 #include "shape.h"
 
@@ -84,4 +83,15 @@ bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2, bool is_epsil_zero) {
     if (o4 == 0 and on_segment(p2, q1, q2, is_epsil_zero)) return true; 
   
     return false;
+}
+
+void square(double x, double y){
+	draw_line(x-1.5,y-1.5, 3, 0, 0, 0, 1);
+	draw_line(x+1.5,y-1.5, 3, M_PI/2, 0, 0, 1);
+	draw_line(x+1.5,y+1.5, 3, -M_PI, 0, 0, 1);
+	draw_line(x-1.5,y+1.5, 3, -M_PI/2, 0, 0, 1);
+}
+
+void circle(double x, double y, double ray, double r, double g, double b){
+	draw_arc (x, y, ray, -M_PI, M_PI, r, g, b);
 }

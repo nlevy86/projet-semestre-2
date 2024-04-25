@@ -5,7 +5,6 @@
 #define LIFEFORM_H
 
 #include <iostream>
-#include <cmath>
 #include <vector>
 #include "message.h"
 #include "constantes.h"
