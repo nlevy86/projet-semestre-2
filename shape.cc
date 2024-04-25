@@ -86,10 +86,10 @@ bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2, bool is_epsil_zero) {
 }
 
 void square(double x, double y){
-	draw_line(x-1.5,y-1.5, 3, 0, 0, 0, 1);
-	draw_line(x+1.5,y-1.5, 3, M_PI/2, 0, 0, 1);
-	draw_line(x+1.5,y+1.5, 3, -M_PI, 0, 0, 1);
-	draw_line(x-1.5,y+1.5, 3, -M_PI/2, 0, 0, 1);
+	draw_line(x-(d_cor/2),y-(d_cor/2), d_cor, 0, 0, 0, 1);
+	draw_line(x+(d_cor/2),y-(d_cor/2), d_cor, M_PI/2, 0, 0, 1);
+	draw_line(x+(d_cor/2),y+(d_cor/2), d_cor, -M_PI, 0, 0, 1);
+	draw_line(x-(d_cor/2),y+(d_cor/2), d_cor, -M_PI/2, 0, 0, 1);
 }
 
 void circle(double x, double y, double ray, double r, double g, double b){
