@@ -29,7 +29,7 @@ bool superpo_commun(Segment segment_1, Segment segment_2, bool is_epsil_zero);
 bool on_segment(S2d p, S2d q, S2d r, bool is_epsil_zero);
 int orientation(S2d p, S2d q, S2d r, bool is_epsil_zero);
 bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2, bool is_epsil_zero);
-void square(double x, double y);
+void square(double x, double y, double d, double r, double g, double b);
 void circle(double x, double y, double ray, double r, double g, double b);
 
 #endif

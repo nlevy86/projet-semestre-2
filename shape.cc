@@ -85,11 +85,11 @@ bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2, bool is_epsil_zero) {
     return false;
 }
 
-void square(double x, double y){
-	draw_line(x-(d_cor/2),y-(d_cor/2), d_cor, 0, 0, 0, 1);
-	draw_line(x+(d_cor/2),y-(d_cor/2), d_cor, M_PI/2, 0, 0, 1);
-	draw_line(x+(d_cor/2),y+(d_cor/2), d_cor, -M_PI, 0, 0, 1);
-	draw_line(x-(d_cor/2),y+(d_cor/2), d_cor, -M_PI/2, 0, 0, 1);
+void square(double x, double y, double d, double r, double g, double b){
+	draw_line(x-(d/2),y-(d/2), d, 0, r, g, b);
+	draw_line(x+(d/2),y-(d/2), d, M_PI/2, r, g, b);
+	draw_line(x+(d/2),y+(d/2), d, -M_PI, r, g, b);
+	draw_line(x-(d/2),y+(d/2), d, -M_PI/2, r, g, b);
 }
 
 void circle(double x, double y, double ray, double r, double g, double b){

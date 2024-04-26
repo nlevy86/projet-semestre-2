@@ -287,11 +287,25 @@ const void Simulation::dessin(int width, int height){
 				scavengers[i].get_lifeform_pos().y, scavengers[i].get_ray(), 1, 0, 0);
 	}
 	for (size_t i(0); i<corals.size(); ++i){
-		square(corals[i].get_lifeform_pos().x, corals[i].get_lifeform_pos().y);
+		if (corals[i].get_cor_status() == 1){
+			square(corals[i].get_lifeform_pos().x, corals[i].get_lifeform_pos().y, 
+																d_cor, 0, 0, 1);
+		} else {
+			square(corals[i].get_lifeform_pos().x, corals[i].get_lifeform_pos().y, 
+					d_cor, 0, 0, 0);
+		}
 		for (size_t j(0); j<corals[i].get_cor_size(); ++j){
-			draw_line(corals[i].get_cor_element(j).base.x, 
-			corals[i].get_cor_element(j).base.y, corals[i].get_cor_element(j).longueur, 
-			corals[i].get_cor_element(j).angle, 0, 0, 1);
+			if (corals[i].get_cor_status() == 1){
+				draw_line(corals[i].get_cor_element(j).base.x, 
+						corals[i].get_cor_element(j).base.y, 
+						corals[i].get_cor_element(j).longueur, 
+						corals[i].get_cor_element(j).angle, 0, 0, 1);
+			} else {
+				draw_line(corals[i].get_cor_element(j).base.x, 
+						corals[i].get_cor_element(j).base.y, 
+						corals[i].get_cor_element(j).longueur, 
+						corals[i].get_cor_element(j).angle, 0, 0, 0);
+			}
 			
 		}
 	}
