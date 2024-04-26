@@ -35,7 +35,7 @@ Gui::Gui(Simulation sim):
 	label_nb_cor(simulation.get_size_corals()),
 	label_nb_sca(simulation.get_size_scavengers())
 {
-	set_title("microrécifs");
+	set_title("Microrécif");
 	set_default_size(500, 500);
 	set_child(main_box);
 	main_box.append(second_box);
