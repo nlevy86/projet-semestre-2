@@ -1,5 +1,5 @@
-// Talia Meyer
-// Noam Lévy
+// Talia Meyer 70%
+// Noam Lévy   30%
 
 #include <iostream>
 #include "gui.h"

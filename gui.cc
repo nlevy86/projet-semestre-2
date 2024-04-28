@@ -1,5 +1,5 @@
-// Talia Meyer
-// Noam Lévy
+// Talia Meyer 20%
+// Noam Lévy   80%
 
 #include <iostream>
 #include "gui.h"
@@ -9,7 +9,7 @@ using namespace std;
 static Frame default_frame = {0, 256, 0, 256, 1, 500, 500}; 
 
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
-														Frame frame);
+									Frame frame);
 
 Gui::Gui(Simulation sim):
 	simulation(sim),
@@ -76,35 +76,37 @@ Gui::Gui(Simulation sim):
 	sca_box.append(label_nb_sca);
 	info_box.append(separator2);
 	button_exit.signal_clicked().connect(sigc::mem_fun(*this,
-				&Gui::on_button_clicked_exit) );
+										 &Gui::on_button_clicked_exit));
 	button_open.signal_clicked().connect(sigc::mem_fun(*this,
-				&Gui::on_button_clicked_open) );
+				                         &Gui::on_button_clicked_open));
 	button_save.signal_clicked().connect(sigc::mem_fun(*this,
-				&Gui::on_button_clicked_save) );
+				                         &Gui::on_button_clicked_save));
 	button_start.signal_clicked().connect(sigc::mem_fun(*this,
-				&Gui::on_button_clicked_start) );
+				                          &Gui::on_button_clicked_start));
 	button_step.signal_clicked().connect(sigc::mem_fun(*this,
-				&Gui::on_button_clicked_step) );
+				                         &Gui::on_button_clicked_step));
 	naissance_algue.signal_toggled().connect(sigc::mem_fun(*this,
-				&Gui::activate_naissance_algue) );
+				                             &Gui::activate_naissance_algue));
 	auto controller = Gtk::EventControllerKey::create();
-    controller->signal_key_pressed().connect(
-                  sigc::mem_fun(*this, &Gui::on_window_key_pressed), false);
+    controller->signal_key_pressed().connect(sigc::mem_fun(*this,
+                                             &Gui::on_window_key_pressed), false);
     add_controller(controller);
 }
 
-void Gui::on_button_clicked_exit(){
+void Gui::on_button_clicked_exit()
+{
 	hide();
 }
 
-void Gui::on_button_clicked_open(){
+void Gui::on_button_clicked_open()
+{
 	is_save = false;
 	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
-	Gtk::FileChooser::Action::OPEN);
+	                                         Gtk::FileChooser::Action::OPEN);
 	dialog->set_transient_for(*this);
 	dialog->set_modal(true);
-	dialog->signal_response().connect(sigc::bind(
-	sigc::mem_fun(*this, &Gui::on_file_dialog_response), dialog));
+	dialog->signal_response().connect(sigc::bind(sigc::mem_fun(*this, 
+	                                  &Gui::on_file_dialog_response), dialog));
 	
 	//Add response buttons to the dialog:
 	dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -133,14 +135,15 @@ void Gui::on_button_clicked_open(){
 	dialog->show();
 }
 
-void Gui::on_button_clicked_save(){
+void Gui::on_button_clicked_save()
+{
 	is_save = true;
 	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
-	Gtk::FileChooser::Action::SAVE);
+	                                         Gtk::FileChooser::Action::SAVE);
 	dialog->set_transient_for(*this);
 	dialog->set_modal(true);
-	dialog->signal_response().connect(sigc::bind(
-	sigc::mem_fun(*this, &Gui::on_file_dialog_response), dialog));
+	dialog->signal_response().connect(sigc::bind(sigc::mem_fun(*this, 
+	                                  &Gui::on_file_dialog_response), dialog));
 	
 	//Add response buttons to the dialog:
 	dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -169,7 +172,8 @@ void Gui::on_button_clicked_save(){
 	dialog->show();
 }
 
-bool Gui::start_simulation(){
+bool Gui::start_simulation()
+{
 	if (simulation_running){
 		button_start.set_label("stop");
 		simulation.maj(apparition_algue);
@@ -180,13 +184,15 @@ bool Gui::start_simulation(){
 		label_nb_sca.set_text(simulation.get_size_scavengers());
 		draw.refresh();
 		return true;
+		
 	} else { 
 		button_start.set_label("start");
 		return false;
 	}
 }
 
-void Gui::on_button_clicked_step(){
+void Gui::on_button_clicked_step()
+{
 	simulation.maj(apparition_algue);
 	++compteur_maj;
 	label_nb_maj.set_text(to_string(compteur_maj));
@@ -210,11 +216,15 @@ bool Gui::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
     return false;
 }
 
-void Gui::activate_naissance_algue(){
+
+void Gui::activate_naissance_algue()
+{
 	apparition_algue = naissance_algue.get_active();
 }
 
-void Gui::on_button_clicked_start(){
+
+void Gui::on_button_clicked_start()
+{
 	if (not simulation_running){
 		simulation_running = true;
 		sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
@@ -326,7 +336,8 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
 	
 }
 
-void Drawing::refresh(){
+void Drawing::refresh()
+{
 	queue_draw();
 }
 

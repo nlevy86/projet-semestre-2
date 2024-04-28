@@ -32,8 +32,9 @@ public:
 class Corail: public Lifeform{
 public:
 	Corail(S2d _pos_lifeform, int _age_lifeform, unsigned int _id, 
-			Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, 
-			Status_dev _status_develo, int _nb_segment);
+		   Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, 
+		   Status_dev _status_develo, int _nb_segment);
+		   
 	const bool corail_in();
 	const bool segment_length_in();
 	const bool segment_angle_in();
@@ -57,7 +58,6 @@ private:
 };
 
 class Sca: public Lifeform {
-
 public:
 	Sca(S2d _pos_lifeform, int _age_lifeform, double _ray_sca,
 		Status_sca _status_scaven, int _cor_id_cible = -1 );
