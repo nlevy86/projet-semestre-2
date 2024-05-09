@@ -278,6 +278,27 @@ void Simulation::maj(bool creation_algue)
 			new_alga(u(e), u(e), 1, test);
 		}
 	}
+	for (size_t i(0); i < corals.size(); ++i)
+	{
+		if (corals[i].get_cor_status() == Status_cor::ALIVE){
+		int j(algue_proche(i));
+		double angle;
+		if (j != -1){
+			angle =abs(corals[i].get_cor_element(corals[i].get_cor_size()-1).angle - 
+					   atan2((algae[j].get_lifeform_pos().y - 
+					   corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y), 
+					   (algae[j].get_lifeform_pos().x - 
+					   corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x)));
+			Algue alga(algae[j]);
+			algae[j] = algae.back();
+			algae.back() = alga;
+			algae.pop_back();
+		} else {
+			angle = delta_rot;
+		}
+		corals[i].maj_corail(angle);
+		}
+	}
 }
 
 const string Simulation::get_size_algae(){
@@ -329,3 +350,50 @@ const void Simulation::dessin(int width, int height)
 		}
 	}
 }
+
+const int Simulation::algue_proche(int i)
+{
+	double angle(delta_rot);
+	int index(-1);
+	for (size_t j(0); j < algae.size(); ++j)
+	{
+		double vect_x(algae[j].get_lifeform_pos().x - 
+					corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
+		double vect_y(algae[j].get_lifeform_pos().y - 
+					corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
+		double new_angle;
+		if (sqrt(pow(vect_x,2)+pow(vect_y, 2)) < 
+			corals[i].get_cor_element(corals[i].get_cor_size()-1).longueur){
+			if (corals[i].get_cor_dir() == Dir_rot_cor::TRIGO){
+				if (vect_y >= 0){
+					new_angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
+									 (corals[i].get_cor_size()-1).angle;
+				} else {
+					new_angle = (2*M_PI + atan2(vect_y, vect_x)) - 
+								corals[i].get_cor_element
+								(corals[i].get_cor_size()-1).angle;
+				}
+				if (new_angle > 0 and new_angle< angle){
+					angle = abs(new_angle);
+					index = j;
+				}
+			} else {
+				if (vect_y >= 0){
+					new_angle = corals[i].get_cor_element
+								(corals[i].get_cor_size()-1).angle -
+								atan2(vect_y, vect_x);
+				} else {
+					new_angle = corals[i].get_cor_element
+								(corals[i].get_cor_size()-1).angle - 
+								(2*M_PI + atan2(vect_y, vect_x));
+				}
+				if (new_angle > 0 and new_angle< angle){
+					angle = new_angle;
+					index = j;
+				}
+			}
+		}
+	}
+	return index;
+}
+

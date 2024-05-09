@@ -217,7 +217,42 @@ const int Sca::get_status()
 bool Algue::maj_algue()
 {
 	++age_lifeform;
-	int int_max_life_alg(max_life_alg); // implicit cast
-	return (age_lifeform >= int_max_life_alg);
+	int int_max_life_alg(max_life_alg);
+	return (age_lifeform == int_max_life_alg);
 }
 	
+void Corail::maj_corail(double angle)
+{
+	++age_lifeform;
+	int int_max_life_cor(max_life_cor);
+	if (age_lifeform == int_max_life_cor){
+		status_corail = Status_cor::DEAD;
+	}
+	double double_l_repro(l_repro);
+	if (status_corail == Status_cor::ALIVE){
+		if (cor.back().longueur < double_l_repro){
+			if (dir_rot_corail == Dir_rot_cor::TRIGO){
+				cor.back().angle += delta_rot;
+				if (cor.back().angle >= 2*M_PI){
+					cor.back().angle -= 2*M_PI;
+				}
+			} else {
+				cor.back().angle -= delta_rot;
+				if (cor.back().angle <= 0){
+					cor.back().angle += 2*M_PI;
+				}
+			}
+		} else {
+			if (status_develo == Status_dev::EXTEND){
+				S2d pos{cor.back().base.x + cor.back().longueur*cos(cor.back().angle),
+						cor.back().base.y + cor.back().longueur*sin(cor.back().angle)};
+				Segment seg{pos, l_repro - l_seg_interne, cor.back().angle};
+				cor.emplace_back(seg);
+				status_develo = Status_dev::REPRO;
+			}
+		}
+	}
+}
+	
+		
+		

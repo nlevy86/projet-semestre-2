@@ -39,6 +39,7 @@ private:
 				 int target_id, bool& test);
 	void new_segment(double angle, double length, Corail *current, bool& test);
     bool id_match(unsigned int tested_id, bool& test);
+    const int algue_proche(int i);
 };
 
 #endif

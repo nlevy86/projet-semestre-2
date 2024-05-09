@@ -47,6 +47,7 @@ public:
 	const int get_cor_status();
 	const int get_cor_dir();
 	const int get_cor_dev();
+	void maj_corail(double angle);
 private:
 	unsigned int id;
 	Status_cor status_corail;
