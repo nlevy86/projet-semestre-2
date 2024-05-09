@@ -221,23 +221,25 @@ bool Algue::maj_algue()
 	return (age_lifeform == int_max_life_alg);
 }
 	
-void Corail::maj_corail(double angle)
-{
+void Corail::maj_corail(double angle){
 	++age_lifeform;
 	int int_max_life_cor(max_life_cor);
 	if (age_lifeform == int_max_life_cor){
 		status_corail = Status_cor::DEAD;
 	}
+	if (angle < delta_rot){
+		cor.back().longueur += delta_l;
+	}
 	double double_l_repro(l_repro);
 	if (status_corail == Status_cor::ALIVE){
 		if (cor.back().longueur < double_l_repro){
 			if (dir_rot_corail == Dir_rot_cor::TRIGO){
-				cor.back().angle += delta_rot;
+				cor.back().angle += angle;
 				if (cor.back().angle >= 2*M_PI){
 					cor.back().angle -= 2*M_PI;
 				}
 			} else {
-				cor.back().angle -= delta_rot;
+				cor.back().angle -= angle;
 				if (cor.back().angle <= 0){
 					cor.back().angle += 2*M_PI;
 				}
@@ -246,7 +248,7 @@ void Corail::maj_corail(double angle)
 			if (status_develo == Status_dev::EXTEND){
 				S2d pos{cor.back().base.x + cor.back().longueur*cos(cor.back().angle),
 						cor.back().base.y + cor.back().longueur*sin(cor.back().angle)};
-				Segment seg{pos, l_repro - l_seg_interne, cor.back().angle};
+				Segment seg{pos, 12, cor.back().angle};
 				cor.emplace_back(seg);
 				status_develo = Status_dev::REPRO;
 			}

@@ -40,6 +40,8 @@ private:
 	void new_segment(double angle, double length, Corail *current, bool& test);
     bool id_match(unsigned int tested_id, bool& test);
     const int algue_proche(int i);
+    void destruction_algue(int j);
+    const double calcul_angle(int i, int j);
 };
 
 #endif

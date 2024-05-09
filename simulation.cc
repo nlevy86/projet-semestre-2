@@ -254,49 +254,28 @@ bool Simulation::id_match(unsigned int tested_id, bool& test)
     return false;
 }
 
-void Simulation::maj(bool creation_algue)
-{
-	for (size_t i(0); i < algae.size(); ++i)
-	{
-		if (algae[i].maj_algue())
-		{
-			Algue alga(algae[i]);
-			algae[i] = algae.back();
-			algae.back() = alga;
-			algae.pop_back();
-			--i;
+void Simulation::maj(bool creation_algue){
+	for (size_t i(0); i < algae.size(); ++i){
+		if (algae[i].maj_algue()){
+			destruction_algue(i);
 		}
 	}
-	if (creation_algue)
-	{
+	if (creation_algue){
 		double p(alg_birth_rate);
 		bernoulli_distribution b(p);
-		if (b(e))
-		{
+		if (b(e)){
 			uniform_int_distribution<unsigned> u(1,dmax-1);
 			bool test (true);
 			new_alga(u(e), u(e), 1, test);
 		}
 	}
-	for (size_t i(0); i < corals.size(); ++i)
-	{
+	for (size_t i(0); i < corals.size(); ++i){
 		if (corals[i].get_cor_status() == Status_cor::ALIVE){
-		int j(algue_proche(i));
-		double angle;
-		if (j != -1){
-			angle =abs(corals[i].get_cor_element(corals[i].get_cor_size()-1).angle - 
-					   atan2((algae[j].get_lifeform_pos().y - 
-					   corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y), 
-					   (algae[j].get_lifeform_pos().x - 
-					   corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x)));
-			Algue alga(algae[j]);
-			algae[j] = algae.back();
-			algae.back() = alga;
-			algae.pop_back();
-		} else {
-			angle = delta_rot;
-		}
-		corals[i].maj_corail(angle);
+			int j(algue_proche(i));
+			double angle;
+			angle = abs(calcul_angle(i, j));
+			destruction_algue(j);
+			corals[i].maj_corail(angle);
 		}
 	}
 }
@@ -312,8 +291,7 @@ const string Simulation::get_size_scavengers(){
 	return to_string(scavengers.size());
 }
 
-const void Simulation::dessin(int width, int height)
-{
+const void Simulation::dessin(int width, int height){
 	for (size_t i(0); i<algae.size(); ++i){
 		circle(algae[i].get_lifeform_pos().x,algae[i].get_lifeform_pos().y , r_alg, 
 		       0, 1, 0);
@@ -324,10 +302,8 @@ const void Simulation::dessin(int width, int height)
 			   scavengers[i].get_lifeform_pos().y, scavengers[i].get_ray(), 1, 0, 0);
 	}
 	
-	for (size_t i(0); i<corals.size(); ++i)
-	{
-		if (corals[i].get_cor_status() == 1)
-		{
+	for (size_t i(0); i<corals.size(); ++i){
+		if (corals[i].get_cor_status() == 1){
 			square(corals[i].get_lifeform_pos().x, corals[i].get_lifeform_pos().y, 
 				   d_cor, 0, 0, 1);
 		} else {
@@ -335,8 +311,7 @@ const void Simulation::dessin(int width, int height)
 				   d_cor, 0, 0, 0);
 		}
 		for (size_t j(0); j<corals[i].get_cor_size(); ++j){
-			if (corals[i].get_cor_status() == 1)
-			{
+			if (corals[i].get_cor_status() == 1){
 				draw_line(corals[i].get_cor_element(j).base.x, 
 						  corals[i].get_cor_element(j).base.y, 
 						  corals[i].get_cor_element(j).longueur, 
@@ -351,31 +326,28 @@ const void Simulation::dessin(int width, int height)
 	}
 }
 
-const int Simulation::algue_proche(int i)
-{
+const int Simulation::algue_proche(int i){
 	double angle(delta_rot);
 	int index(-1);
-	for (size_t j(0); j < algae.size(); ++j)
-	{
+	for (size_t j(0); j < algae.size(); ++j){
 		double vect_x(algae[j].get_lifeform_pos().x - 
-					corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
+					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
 		double vect_y(algae[j].get_lifeform_pos().y - 
-					corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
+					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
 		double new_angle;
 		if (sqrt(pow(vect_x,2)+pow(vect_y, 2)) < 
 			corals[i].get_cor_element(corals[i].get_cor_size()-1).longueur){
 			if (corals[i].get_cor_dir() == Dir_rot_cor::TRIGO){
 				if (vect_y >= 0){
 					new_angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
-									 (corals[i].get_cor_size()-1).angle;
+						        (corals[i].get_cor_size()-1).angle;
 				} else {
 					new_angle = (2*M_PI + atan2(vect_y, vect_x)) - 
 								corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle;
 				}
 				if (new_angle > 0 and new_angle< angle){
-					angle = abs(new_angle);
-					index = j;
+					angle = new_angle; index = j;
 				}
 			} else {
 				if (vect_y >= 0){
@@ -388,8 +360,7 @@ const int Simulation::algue_proche(int i)
 								(2*M_PI + atan2(vect_y, vect_x));
 				}
 				if (new_angle > 0 and new_angle< angle){
-					angle = new_angle;
-					index = j;
+					angle = new_angle; index = j;
 				}
 			}
 		}
@@ -397,3 +368,31 @@ const int Simulation::algue_proche(int i)
 	return index;
 }
 
+void Simulation::destruction_algue(int j){
+	if (j!= -1){
+		Algue alga(algae[j]);
+		algae[j] = algae.back();
+		algae.back() = alga;
+		algae.pop_back();
+	}
+}
+
+const double Simulation::calcul_angle(int i, int j){
+	double angle;
+	if (j!= -1){
+		double vect_x(algae[j].get_lifeform_pos().x - 
+					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
+		double vect_y(algae[j].get_lifeform_pos().y - 
+					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
+		if (vect_y >= 0){
+			angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
+					(corals[i].get_cor_size()-1).angle;
+		} else {
+			angle = (2*M_PI + atan2(vect_y, vect_x)) - corals[i].get_cor_element
+					(corals[i].get_cor_size()-1).angle;
+		}
+	} else {
+		angle = delta_rot;
+	}
+	return angle;	
+}
