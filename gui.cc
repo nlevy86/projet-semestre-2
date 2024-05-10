@@ -30,7 +30,7 @@ Gui::Gui(Simulation sim):
 	label_algue("algues :"),
 	label_cor("corails :"),
 	label_sca("charognards :"),
-	label_nb_maj(to_string(compteur_maj)),
+	label_nb_maj(to_string(simulation.get_nb_sim())),
 	label_nb_algue(simulation.get_size_algae()),
 	label_nb_cor(simulation.get_size_corals()),
 	label_nb_sca(simulation.get_size_scavengers())
@@ -92,6 +92,7 @@ Gui::Gui(Simulation sim):
                                              &Gui::on_window_key_pressed), false);
     add_controller(controller);
 }
+
 
 void Gui::on_button_clicked_exit()
 {
@@ -177,8 +178,7 @@ bool Gui::start_simulation()
 	if (simulation_running){
 		button_start.set_label("stop");
 		simulation.maj(apparition_algue);
-		++compteur_maj;
-		label_nb_maj.set_text(to_string(compteur_maj));
+		label_nb_maj.set_text(to_string(simulation.get_nb_sim()));
 		label_nb_algue.set_text(simulation.get_size_algae());
 		label_nb_cor.set_text(simulation.get_size_corals());
 		label_nb_sca.set_text(simulation.get_size_scavengers());
@@ -194,8 +194,7 @@ bool Gui::start_simulation()
 void Gui::on_button_clicked_step()
 {
 	simulation.maj(apparition_algue);
-	++compteur_maj;
-	label_nb_maj.set_text(to_string(compteur_maj));
+	label_nb_maj.set_text(to_string(simulation.get_nb_sim()));
 	label_nb_algue.set_text(simulation.get_size_algae());
 	label_nb_cor.set_text(simulation.get_size_corals());
 	label_nb_sca.set_text(simulation.get_size_scavengers());

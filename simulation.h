@@ -24,12 +24,15 @@ public:
     const std::string get_size_scavengers();
     void maj(bool creation_algue);
     const void dessin(int width, int height);
+    const int get_nb_sim();
     
 private:
 
     std::vector<Algue> algae {};
     std::vector<Corail> corals {};
     std::vector<Sca> scavengers {};
+	
+	int nb_sim = 0;
 	
 	void new_alga(double x, double y, int age, bool& test);
 	Corail* new_coral(double x, double y, int age, unsigned int id, 
@@ -42,6 +45,11 @@ private:
     const int algue_proche(int i);
     void destruction_algue(int j);
     const double calcul_angle(int i, int j);
+    const unsigned int creation_id();
+    void apparition_aleatoire_algue();
+    void super_maj_cor(int i);
+    void Simulation::batterie_tests(int i, double vieil_angle);
+    
 };
 
 #endif

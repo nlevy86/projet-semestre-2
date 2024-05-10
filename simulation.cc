@@ -254,31 +254,6 @@ bool Simulation::id_match(unsigned int tested_id, bool& test)
     return false;
 }
 
-void Simulation::maj(bool creation_algue){
-	for (size_t i(0); i < algae.size(); ++i){
-		if (algae[i].maj_algue()){
-			destruction_algue(i);
-		}
-	}
-	if (creation_algue){
-		double p(alg_birth_rate);
-		bernoulli_distribution b(p);
-		if (b(e)){
-			uniform_int_distribution<unsigned> u(1,dmax-1);
-			bool test (true);
-			new_alga(u(e), u(e), 1, test);
-		}
-	}
-	for (size_t i(0); i < corals.size(); ++i){
-		if (corals[i].get_cor_status() == Status_cor::ALIVE){
-			int j(algue_proche(i));
-			double angle;
-			angle = abs(calcul_angle(i, j));
-			destruction_algue(j);
-			corals[i].maj_corail(angle);
-		}
-	}
-}
 
 const string Simulation::get_size_algae(){
 	return to_string(algae.size());
@@ -370,7 +345,7 @@ const int Simulation::algue_proche(int i){
 
 void Simulation::destruction_algue(int j){
 	if (j!= -1){
-		Algue alga(algae[j]);
+		alga = algae[j];
 		algae[j] = algae.back();
 		algae.back() = alga;
 		algae.pop_back();
@@ -396,3 +371,104 @@ const double Simulation::calcul_angle(int i, int j){
 	}
 	return angle;	
 }
+
+const unsigned int Simulation::creation_id(){
+	unsigned int id(69);
+	bool correct_id_found = false;
+	while (not correct_id_found){
+		id += 1;
+		for (size_t i(0); i < corals.size(); ++i){
+			if (id == corals[i].get_cor_id()){
+				break;
+			} else if (i == corals.size() - 1){
+				correct_id_found = true;
+			}
+		}
+	}
+	return id;
+}
+
+void Simulation::apparition_aleatoire_algue(){
+	double p(alg_birth_rate);
+	bernoulli_distribution b(p);
+	if (b(e)){
+		uniform_int_distribution<unsigned> u(1,dmax-1);
+		bool test (true);
+		new_alga(u(e), u(e), 1, test);
+	}
+}
+
+void Simulation::super_maj_cor(int i){
+	int j(algue_proche(i));
+	double angle;
+	angle = abs(calcul_angle(i, j));
+	destruction_algue(j);
+	if (corals[i].maj_corail(angle)){
+		S2d pos{corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x + 
+				l_seg_interne*cos(corals[i].get_cor_element
+				(corals[i].get_cor_size()-1).angle), 
+				corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y + 
+				l_seg_interne*sin(corals[i].get_cor_element
+				(corals[i].get_cor_size()-1).angle)};
+		Corail corail(pos, 1, creation_id(), Status_cor::ALIVE, 
+					  Dir_rot_cor::TRIGO, Status_dev::EXTEND, 1);
+		corail.add_segment(corals[i].get_cor_element
+						   (corals[i].get_cor_size()-1).angle, 
+						   l_repro - l_seg_interne);
+		corals.emplace_back(corail);
+	}
+}
+
+const int Simulation::get_nb_sim(){
+	return nb_sim;
+}
+
+
+void Simulation::maj(bool creation_algue){
+	++nb_sim;
+	file_writing("mise à jour préc.txt");
+	for (size_t i(0); i < algae.size(); ++i){
+		if (algae[i].maj_algue()){
+			destruction_algue(i);
+		}
+	}
+	if (creation_algue){
+		apparition_aleatoire_algue();
+	}
+	for (size_t i(0); i < corals.size(); ++i){
+		double vieil_angle(ecart_angulaire(corals[i].get_cor_element(get_cor_size() - 
+						   1), corals[i].get_cor_element(get_cor_size() - 2)))
+		if (corals[i].get_cor_status() == Status_cor::ALIVE){
+			super_maj_cor(i);
+		}
+	}
+}
+
+bool Simulation::intersec_others(int k){
+	for(size_t i(0); i < corals.size() - 1; ++i)
+    { 
+       for(size_t j(0); j < corals[i].get_cor_size(); ++j)
+       { 
+			S2d fin_j{};
+			fin_j.x = corals[i].get_cor_element(j).base.x + 
+					  corals[i].get_cor_element(j).longueur * 
+					  cos(corals[i].get_cor_element(j).angle);
+					
+			fin_j.y = corals[i].get_cor_element(j).base.y + 
+					  corals[i].get_cor_element(j).longueur * 
+					  sin(corals[i].get_cor_element(j).angle);
+					
+            if(do_intersect(corals[k].get_cor_element(cor_size - 1).base, 
+			   fin_c, corals[i].get_cor_element(j).base, fin_j, false))
+			   {
+                cout << message::segment_collision(current->get_cor_id(), 
+					                               (cor_size - 1), 
+					                               corals[i].get_cor_id(), j);
+                test = false;
+            }
+       } 
+    }
+
+void Simulation::batterie_tests(int i, double vieil_angle){
+	for (int j(0); j < corals.size(); ++j){
+		if (superpo_active(vieil_angle) and corals[i].segment_not_coll_him(true) and 

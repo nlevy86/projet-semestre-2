@@ -49,12 +49,11 @@ private:
 
 class Gui : public Gtk::Window {
 public:
-	Gui(Simulation sim);	
+	Gui(Simulation sim);
 private:
 	Simulation simulation;
 	Drawing draw;
 	bool apparition_algue = false;
-	int compteur_maj = 0;
 	bool simulation_running = false;
 	void on_button_clicked_exit();
 	void on_button_clicked_open();

@@ -221,7 +221,7 @@ bool Algue::maj_algue()
 	return (age_lifeform == int_max_life_alg);
 }
 	
-void Corail::maj_corail(double angle){
+bool Corail::maj_corail(double angle){
 	++age_lifeform;
 	int int_max_life_cor(max_life_cor);
 	if (age_lifeform == int_max_life_cor){
@@ -231,6 +231,7 @@ void Corail::maj_corail(double angle){
 		cor.back().longueur += delta_l;
 	}
 	double double_l_repro(l_repro);
+	bool is_repro(false);
 	if (status_corail == Status_cor::ALIVE){
 		if (cor.back().longueur < double_l_repro){
 			if (dir_rot_corail == Dir_rot_cor::TRIGO){
@@ -248,13 +249,26 @@ void Corail::maj_corail(double angle){
 			if (status_develo == Status_dev::EXTEND){
 				S2d pos{cor.back().base.x + cor.back().longueur*cos(cor.back().angle),
 						cor.back().base.y + cor.back().longueur*sin(cor.back().angle)};
-				Segment seg{pos, 12, cor.back().angle};
+				Segment seg{pos, cor.back().angle, l_repro - l_seg_interne};
 				cor.emplace_back(seg);
 				status_develo = Status_dev::REPRO;
+			} else {
+				cor.back().longueur = l_repro/2;
+				is_repro = true;
+				status_develo = Status_dev::EXTEND;
 			}
 		}
 	}
+	return is_repro;
+}
+
+bool Corail::superpo_active(double vieil angle){
+	double new_angle(ecart_angulaire(cor.back().angle, cor[cor.size() - 1].angle);
+	if (vieil_angle < 0 and new_angle > 0){
+		return true;
+	} else if (vieil_angle > 0 and new_angle < 0){
+		return true;
+	}
+	return false;
 }
 	
-		
-		
