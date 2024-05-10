@@ -48,7 +48,8 @@ public:
 	const int get_cor_dir();
 	const int get_cor_dev();
 	bool maj_corail(double angle);
-	bool superpo_active(double vieil_angle);
+	bool not_superpo_active(double vieil_angle);
+	void change_dir(int dir);
 private:
 	unsigned int id;
 	Status_cor status_corail;

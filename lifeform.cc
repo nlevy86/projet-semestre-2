@@ -262,13 +262,25 @@ bool Corail::maj_corail(double angle){
 	return is_repro;
 }
 
-bool Corail::superpo_active(double vieil angle){
-	double new_angle(ecart_angulaire(cor.back().angle, cor[cor.size() - 1].angle);
-	if (vieil_angle < 0 and new_angle > 0){
-		return true;
-	} else if (vieil_angle > 0 and new_angle < 0){
-		return true;
+bool Corail::not_superpo_active(double vieil_angle){
+	if (cor.size() > 1){
+		double new_angle(ecart_angulaire(cor.back(), cor[cor.size() - 2]));
+		if (vieil_angle < 0 and new_angle > 0){
+			cout << "je te baise";
+			return false;
+		} else if (vieil_angle > 0 and new_angle < 0){
+			cout << "je te baise";
+			return false;
+		}
 	}
-	return false;
+	return true;
 }
-	
+
+void Corail::change_dir(int dir){
+	if (dir == 0){
+		dir_rot_corail = INVTRIGO;
+	} else {
+		dir_rot_corail = TRIGO;
+	}
+}
+

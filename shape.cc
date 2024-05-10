@@ -12,6 +12,20 @@ Segment::Segment(const S2d& _base, double _angle, double _longueur):
 
 double ecart_angulaire(Segment segment_1, Segment segment_2)
 {
+	while (segment_1.angle < 0 or segment_1.angle > 2*M_PI){
+		if (segment_1.angle < 0){
+			segment_1.angle += 2*M_PI;
+		} else {
+			segment_1.angle -= 2*M_PI;
+		}
+	}
+	while (segment_2.angle < 0 or segment_2.angle > 2*M_PI){
+		if (segment_2.angle < 0){
+			segment_2.angle += 2*M_PI;
+		} else {
+			segment_2.angle -= 2*M_PI;
+		}
+	}
 	double ecart(segment_1.angle + (M_PI - segment_2.angle));
 	if (ecart < -M_PI)
 	{
