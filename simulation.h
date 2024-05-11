@@ -25,6 +25,7 @@ public:
     void maj(bool creation_algue);
     const void dessin(int width, int height);
     const int get_nb_sim();
+    void set_nb_sim();
     
 private:
 

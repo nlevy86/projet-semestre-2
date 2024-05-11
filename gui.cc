@@ -247,6 +247,7 @@ void Gui::on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialo
 			} else {
 				simulation.reinit();
 				simulation.lecture(filename, true);
+				simulation.set_nb_sim();
 				label_nb_maj.set_text("0");
 				label_nb_algue.set_text(simulation.get_size_algae());
 				label_nb_cor.set_text(simulation.get_size_corals());

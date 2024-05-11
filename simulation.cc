@@ -309,30 +309,38 @@ const int Simulation::algue_proche(size_t i){
 					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
 		double vect_y(algae[j].get_lifeform_pos().y - 
 					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
-		double new_angle;
+		double new_angle(delta_rot);
 		if (sqrt(pow(vect_x,2)+pow(vect_y, 2)) < 
 			corals[i].get_cor_element(corals[i].get_cor_size()-1).longueur){
 			if (corals[i].get_cor_dir() == Dir_rot_cor::TRIGO){
-				if (vect_y >= 0){
+				if (vect_y >= 0 or (vect_y <= 0 and corals[i].get_cor_element
+					(corals[i].get_cor_size()-1).angle < 0)){
 					new_angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
 						        (corals[i].get_cor_size()-1).angle;
 				} else {
-					new_angle = (2*M_PI + atan2(vect_y, vect_x)) - 
+					new_angle = 2*M_PI + atan2(vect_y, vect_x) - 
 								corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle;
 				}
-				if (new_angle > 0 and new_angle< angle){
+				if (new_angle > 0 and new_angle < angle){
 					angle = new_angle; index = j;
 				}
 			} else {
-				if (vect_y >= 0){
+				if ((vect_y >= 0 and corals[i].get_cor_element
+				    (corals[i].get_cor_size()-1).angle > 0) or 
+				    (vect_y <= 0 and corals[i].get_cor_element
+					(corals[i].get_cor_size()-1).angle > 0)){
 					new_angle = corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle -
 								atan2(vect_y, vect_x);
-				} else {
-					new_angle = corals[i].get_cor_element
+				} else if (vect_y >= 0 and corals[i].get_cor_element
+						   (corals[i].get_cor_size()-1).angle < 0){
+					new_angle = 2*M_PI + corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle - 
-								(2*M_PI + atan2(vect_y, vect_x));
+								atan2(vect_y, vect_x);
+				} else {
+					new_angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
+						        (corals[i].get_cor_size()-1).angle;
 				}
 				if (new_angle > 0 and new_angle< angle){
 					angle = new_angle; index = j;
@@ -359,13 +367,13 @@ const double Simulation::calcul_angle(size_t i, int j){
 					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
 		double vect_y(algae[j].get_lifeform_pos().y - 
 					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
-		if (vect_y >= 0){
-			angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
-					(corals[i].get_cor_size()-1).angle;
-		} else {
-			angle = (2*M_PI + atan2(vect_y, vect_x)) - corals[i].get_cor_element
-					(corals[i].get_cor_size()-1).angle;
-		}
+		if ((vect_y >= 0 and corals[i].get_cor_element
+			(corals[i].get_cor_size()-1).angle > 0) or 
+			(vect_y <= 0 and corals[i].get_cor_element
+			(corals[i].get_cor_size()-1).angle < 0)){
+			angle = abs(atan2(vect_y, vect_x) - corals[i].get_cor_element
+						        (corals[i].get_cor_size()-1).angle);
+		} 
 	} else {
 		angle = delta_rot;
 	}
@@ -399,20 +407,24 @@ void Simulation::apparition_aleatoire_algue(){
 }
 
 void Simulation::super_maj_cor(size_t i){
-	int j(algue_proche(i));
-	double angle;
-	angle = abs(calcul_angle(i, j));
-	destruction_algue(j);
-	if (corals[i].maj_corail(angle)){
-		cout<<"deso";
+	int j(algue_proche(i)); //*
+	double angle = abs(calcul_angle(i, j)); //*
+	
+	destruction_algue(j); //*
+	
+	if (corals[i].maj_corail(angle, j)){
+		
+		// Creates new coral and adds it to simulation
 		S2d pos{corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x + 
 				l_seg_interne*cos(corals[i].get_cor_element
 				(corals[i].get_cor_size()-1).angle), 
 				corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y + 
 				l_seg_interne*sin(corals[i].get_cor_element
 				(corals[i].get_cor_size()-1).angle)};
+				
 		Corail corail(pos, 1, creation_id(), Status_cor::ALIVE, 
 					  Dir_rot_cor::TRIGO, Status_dev::EXTEND, 1);
+					  
 		corail.add_segment(corals[i].get_cor_element
 						   (corals[i].get_cor_size()-1).angle, 
 						   l_repro - l_seg_interne);
@@ -424,62 +436,64 @@ const int Simulation::get_nb_sim(){
 	return nb_sim;
 }
 
+void Simulation::set_nb_sim(){
+	nb_sim = 0;
+}
 
 void Simulation::maj(bool creation_algue){
 	++nb_sim;
+	// cout << nb_sim << " ";
 	file_writing("mise à jour préc.txt");
 	for (size_t i(0); i < algae.size(); ++i){
 		if (algae[i].maj_algue()){
 			destruction_algue(i);
 		}
 	}
+	
 	if (creation_algue){
 		apparition_aleatoire_algue();
 	}
+	
 	for (size_t i(0); i < corals.size(); ++i){
-		cout << "bonjour";
-		if (corals[i].get_cor_status() == Status_cor::ALIVE){
-			super_maj_cor(i);
-		}
 		double vieil_angle(0);
 		if (corals[i].get_cor_size() > 1){
-			double vieil_angle = ecart_angulaire(corals[i].get_cor_element
-							(corals[i].get_cor_size() - 1), 
-							corals[i].get_cor_element(corals[i].get_cor_size() - 2));
+			vieil_angle = ecart_angulaire(corals[i].get_cor_element(corals[i].get_cor_size() - 1), corals[i].get_cor_element(corals[i].get_cor_size() - 2));
 		}
-		batterie_tests(i, vieil_angle);
+		
+		if (corals[i].get_cor_status() == Status_cor::ALIVE){
+			super_maj_cor(i);
+			batterie_tests(i, vieil_angle);
+		}
+		
 	}
 }
 
 int Simulation::not_intersec_others(size_t k, S2d fin){
 	for(size_t i(0); i < corals.size() ; ++i){
 		if (i != k){
-			cout<<"salut ";
-			cout << i << " " << k << " ";
 			for(size_t j(0); j < corals[i].get_cor_size(); ++j){ 
 				S2d fin_j{};
 				fin_j.x = corals[i].get_cor_element(j).base.x + 
-						corals[i].get_cor_element(j).longueur * 
-						cos(corals[i].get_cor_element(j).angle);
+						  corals[i].get_cor_element(j).longueur * 
+					      cos(corals[i].get_cor_element(j).angle);
 					
 				fin_j.y = corals[i].get_cor_element(j).base.y + 
-						corals[i].get_cor_element(j).longueur * 
-						sin(corals[i].get_cor_element(j).angle);
+						  corals[i].get_cor_element(j).longueur * 
+						  sin(corals[i].get_cor_element(j).angle);
 					
-				if(do_intersect(corals[k].get_cor_element(corals[k].get_cor_size() - 1)
-				   .base, fin, corals[i].get_cor_element(j).base, fin_j, true)){
+				if(do_intersect(corals[k].get_cor_element(corals[k].get_cor_size() - 1).base, fin, corals[i].get_cor_element(j).base, fin_j, false)){
+					return 1;
+					
 					if (j == corals[i].get_cor_size() - 1){
-						cout << "coucou1";
-						cout<< j << " " << k << " ";
-						return j+2;
+						return i+2;
 					} else {
-						cout << "coucou2";
 						return 1;
 					}
 				}   
 			} 
 		}
 	}
+	
 	return 0;
 }
 
@@ -492,21 +506,32 @@ void Simulation::batterie_tests(size_t i, double vieil_angle){
 	fin.y = corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y + 
 			corals[i].get_cor_element(corals[i].get_cor_size()-1).longueur * 
 			sin(corals[i].get_cor_element(corals[i].get_cor_size()-1).angle);
+	
 	int intersec(not_intersec_others(i, fin));
+	
 	if (not(corals[i].not_superpo_active(vieil_angle) and 
-	    corals[i].segment_not_coll_him(true) and intersec == 0)){
-		cout << "Salut";
+	    corals[i].segment_not_coll_him(false) and intersec == 0 and corals[i].in_bord(fin))){
 		--nb_sim;
+		cout << endl << endl << nb_sim << endl << endl;
+		
 		int dir_rot(corals[i].get_cor_dir());
-		int dir_rot_2;
+		int dir_rot_2 = 0;
+				
 		if (intersec != 1){
 			dir_rot_2 = corals[intersec-2].get_cor_dir();
 		}
+		
+		// Resets simulation
 		reinit();
+		
+		// Reload from previous cycle
 		lecture("mise à jour préc.txt", false);
+		
+		// Change dir rot from previous
 		corals[i].change_dir(dir_rot);
+		
 		if (intersec != 1){
-			corals[intersec-2].change_dir(dir_rot_2);
+			corals[intersec - 2].change_dir(dir_rot_2);
 		}
 	}
 }

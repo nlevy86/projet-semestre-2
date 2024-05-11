@@ -221,30 +221,48 @@ bool Algue::maj_algue()
 	return (age_lifeform == int_max_life_alg);
 }
 	
-bool Corail::maj_corail(double angle){
+bool Corail::maj_corail(double angle, int j){
 	++age_lifeform;
+	
 	int int_max_life_cor(max_life_cor);
 	if (age_lifeform == int_max_life_cor){
 		status_corail = Status_cor::DEAD;
 	}
-	if (angle < delta_rot){
+	
+	// Increase length if there's an alga
+	if (j != -1){
 		cor.back().longueur += delta_l;
 	}
+	
 	double double_l_repro(l_repro);
 	bool is_repro(false);
+	
 	if (status_corail == Status_cor::ALIVE){
+		
 		if (cor.back().longueur < double_l_repro){
+			
+			// Rotate in the right direction
+			cout << "=======" << endl;
+			cout << dir_rot_corail << endl;
+			cout << cor.back().angle << endl;
+
 			if (dir_rot_corail == Dir_rot_cor::TRIGO){
 				cor.back().angle += angle;
-				if (cor.back().angle >= 2*M_PI){
+				
+				if (cor.back().angle > M_PI){
 					cor.back().angle -= 2*M_PI;
 				}
 			} else {
 				cor.back().angle -= angle;
-				if (cor.back().angle <= 0){
+				
+				if (cor.back().angle < -M_PI){
 					cor.back().angle += 2*M_PI;
 				}
 			}
+			cout << dir_rot_corail << endl;
+			cout << cor.back().angle << endl;
+			cout << "=======" << endl;
+
 		} else {
 			if (status_develo == Status_dev::EXTEND){
 				S2d pos{cor.back().base.x + cor.back().longueur*cos(cor.back().angle),
@@ -258,6 +276,7 @@ bool Corail::maj_corail(double angle){
 				status_develo = Status_dev::EXTEND;
 			}
 		}
+		
 	}
 	return is_repro;
 }
@@ -265,11 +284,10 @@ bool Corail::maj_corail(double angle){
 bool Corail::not_superpo_active(double vieil_angle){
 	if (cor.size() > 1){
 		double new_angle(ecart_angulaire(cor.back(), cor[cor.size() - 2]));
-		if (vieil_angle < 0 and new_angle > 0){
-			cout << "je te baise";
+		
+		if (vieil_angle < 0 and vieil_angle > -delta_rot and new_angle > 0 and new_angle < delta_rot){
 			return false;
-		} else if (vieil_angle > 0 and new_angle < 0){
-			cout << "je te baise";
+		} else if (vieil_angle > 0 and vieil_angle < delta_rot and new_angle < 0 and new_angle > -delta_rot){
 			return false;
 		}
 	}
@@ -278,9 +296,16 @@ bool Corail::not_superpo_active(double vieil_angle){
 
 void Corail::change_dir(int dir){
 	if (dir == 0){
-		dir_rot_corail = INVTRIGO;
+		dir_rot_corail = Dir_rot_cor::INVTRIGO;
 	} else {
-		dir_rot_corail = TRIGO;
+		dir_rot_corail = Dir_rot_cor::TRIGO;
 	}
 }
-
+ 
+const bool Corail::in_bord(S2d fin){
+	if (fin.x < epsil_zero or fin.x > dmax-epsil_zero or fin.y < epsil_zero or 
+		fin.y > dmax-epsil_zero) {
+			return false;
+	}
+	return true;
+}
