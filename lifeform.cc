@@ -242,10 +242,6 @@ bool Corail::maj_corail(double angle, int j){
 		if (cor.back().longueur < double_l_repro){
 			
 			// Rotate in the right direction
-			cout << "=======" << endl;
-			cout << dir_rot_corail << endl;
-			cout << cor.back().angle << endl;
-
 			if (dir_rot_corail == Dir_rot_cor::TRIGO){
 				cor.back().angle += angle;
 				
@@ -259,10 +255,6 @@ bool Corail::maj_corail(double angle, int j){
 					cor.back().angle += 2*M_PI;
 				}
 			}
-			cout << dir_rot_corail << endl;
-			cout << cor.back().angle << endl;
-			cout << "=======" << endl;
-
 		} else {
 			if (status_develo == Status_dev::EXTEND){
 				S2d pos{cor.back().base.x + cor.back().longueur*cos(cor.back().angle),
@@ -285,9 +277,11 @@ bool Corail::not_superpo_active(double vieil_angle){
 	if (cor.size() > 1){
 		double new_angle(ecart_angulaire(cor.back(), cor[cor.size() - 2]));
 		
-		if (vieil_angle < 0 and vieil_angle > -delta_rot and new_angle > 0 and new_angle < delta_rot){
+		if (vieil_angle < 0 and vieil_angle > -delta_rot and new_angle > 0 and 
+		    new_angle < delta_rot){
 			return false;
-		} else if (vieil_angle > 0 and vieil_angle < delta_rot and new_angle < 0 and new_angle > -delta_rot){
+		} else if (vieil_angle > 0 and vieil_angle < delta_rot and new_angle < 0 and 
+		           new_angle > -delta_rot){
 			return false;
 		}
 	}

@@ -21,10 +21,12 @@ void Simulation::reinit(){
 }
 
 //Premiere fonction/methode de plus de 40 lignes
-void Simulation::lecture(const string& nom_fichier, bool is_testing)
+void Simulation::lecture(const string& nom_fichier, bool is_testing, bool epsil_zero)
 {
 	bool test = true;
-	e.seed(1);
+	if (is_testing){
+		e.seed(1);
+	}
     ifstream fichier(nom_fichier.c_str());
     Section section = Section::NONE;
     string buffer{};
@@ -74,8 +76,8 @@ void Simulation::lecture(const string& nom_fichier, bool is_testing)
 				test = test and corals.back().corail_in();
 				test = test and corals.back().segment_length_in();
 				test = test and corals.back().segment_angle_in();
-				test = test and corals.back().segment_not_superpo(false);
-				test = test and corals.back().segment_not_coll_him(false);
+				test = test and corals.back().segment_not_superpo(epsil_zero);
+				test = test and corals.back().segment_not_coll_him(epsil_zero);
 				--nb;
             } else {
                 ligne >> nb;
@@ -328,19 +330,14 @@ const int Simulation::algue_proche(size_t i){
 			} else {
 				if ((vect_y >= 0 and corals[i].get_cor_element
 				    (corals[i].get_cor_size()-1).angle > 0) or 
-				    (vect_y <= 0 and corals[i].get_cor_element
-					(corals[i].get_cor_size()-1).angle > 0)){
+				    (vect_y <= 0)){
 					new_angle = corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle -
 								atan2(vect_y, vect_x);
-				} else if (vect_y >= 0 and corals[i].get_cor_element
-						   (corals[i].get_cor_size()-1).angle < 0){
+				} else {
 					new_angle = 2*M_PI + corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle - 
 								atan2(vect_y, vect_x);
-				} else {
-					new_angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
-						        (corals[i].get_cor_size()-1).angle;
 				}
 				if (new_angle > 0 and new_angle< angle){
 					angle = new_angle; index = j;
@@ -367,14 +364,33 @@ const double Simulation::calcul_angle(size_t i, int j){
 					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x);
 		double vect_y(algae[j].get_lifeform_pos().y - 
 					  corals[i].get_cor_element(corals[i].get_cor_size()-1).base.y);
-		if ((vect_y >= 0 and corals[i].get_cor_element
-			(corals[i].get_cor_size()-1).angle > 0) or 
-			(vect_y <= 0 and corals[i].get_cor_element
-			(corals[i].get_cor_size()-1).angle < 0)){
-			angle = abs(atan2(vect_y, vect_x) - corals[i].get_cor_element
-						        (corals[i].get_cor_size()-1).angle);
-		} 
+		if (corals[i].get_cor_dir() == Dir_rot_cor::TRIGO){
+			if (vect_y >= 0 or (vect_y <= 0 and corals[i].get_cor_element
+				(corals[i].get_cor_size()-1).angle < 0)){
+				angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
+				(corals[i].get_cor_size()-1).angle;
+			} else {
+				angle = 2*M_PI + atan2(vect_y, vect_x) - 
+							corals[i].get_cor_element
+							(corals[i].get_cor_size()-1).angle;
+			}
+		} else {
+			if ((vect_y >= 0 and corals[i].get_cor_element
+				(corals[i].get_cor_size()-1).angle > 0) or 
+				(vect_y <= 0)){
+				angle = corals[i].get_cor_element
+						(corals[i].get_cor_size()-1).angle -
+						atan2(vect_y, vect_x);
+			} else {
+				angle = 2*M_PI + corals[i].get_cor_element
+						(corals[i].get_cor_size()-1).angle - 
+						atan2(vect_y, vect_x);
+			}
+		}
 	} else {
+		angle = delta_rot;
+	}
+	if (angle < 0){
 		angle = delta_rot;
 	}
 	return angle;	
@@ -408,7 +424,7 @@ void Simulation::apparition_aleatoire_algue(){
 
 void Simulation::super_maj_cor(size_t i){
 	int j(algue_proche(i)); //*
-	double angle = abs(calcul_angle(i, j)); //*
+	double angle(calcul_angle(i, j)); //*
 	
 	destruction_algue(j); //*
 	
@@ -457,7 +473,9 @@ void Simulation::maj(bool creation_algue){
 	for (size_t i(0); i < corals.size(); ++i){
 		double vieil_angle(0);
 		if (corals[i].get_cor_size() > 1){
-			vieil_angle = ecart_angulaire(corals[i].get_cor_element(corals[i].get_cor_size() - 1), corals[i].get_cor_element(corals[i].get_cor_size() - 2));
+			vieil_angle = ecart_angulaire(corals[i].get_cor_element
+			(corals[i].get_cor_size() - 1), corals[i].get_cor_element
+			(corals[i].get_cor_size() - 2));
 		}
 		
 		if (corals[i].get_cor_status() == Status_cor::ALIVE){
@@ -481,9 +499,9 @@ int Simulation::not_intersec_others(size_t k, S2d fin){
 						  corals[i].get_cor_element(j).longueur * 
 						  sin(corals[i].get_cor_element(j).angle);
 					
-				if(do_intersect(corals[k].get_cor_element(corals[k].get_cor_size() - 1).base, fin, corals[i].get_cor_element(j).base, fin_j, false)){
-					return 1;
-					
+				if(do_intersect(corals[k].get_cor_element
+				   (corals[k].get_cor_size() - 1).base, fin, 
+				   corals[i].get_cor_element(j).base, fin_j, false)){
 					if (j == corals[i].get_cor_size() - 1){
 						return i+2;
 					} else {
@@ -508,14 +526,11 @@ void Simulation::batterie_tests(size_t i, double vieil_angle){
 			sin(corals[i].get_cor_element(corals[i].get_cor_size()-1).angle);
 	
 	int intersec(not_intersec_others(i, fin));
-	
 	if (not(corals[i].not_superpo_active(vieil_angle) and 
 	    corals[i].segment_not_coll_him(false) and intersec == 0 and corals[i].in_bord(fin))){
 		--nb_sim;
-		cout << endl << endl << nb_sim << endl << endl;
-		
 		int dir_rot(corals[i].get_cor_dir());
-		int dir_rot_2 = 0;
+		int dir_rot_2;
 				
 		if (intersec != 1){
 			dir_rot_2 = corals[intersec-2].get_cor_dir();
@@ -525,7 +540,7 @@ void Simulation::batterie_tests(size_t i, double vieil_angle){
 		reinit();
 		
 		// Reload from previous cycle
-		lecture("mise à jour préc.txt", false);
+		lecture("mise à jour préc.txt", false, true);
 		
 		// Change dir rot from previous
 		corals[i].change_dir(dir_rot);
@@ -533,5 +548,6 @@ void Simulation::batterie_tests(size_t i, double vieil_angle){
 		if (intersec != 1){
 			corals[intersec - 2].change_dir(dir_rot_2);
 		}
+		super_maj_cor(i);
 	}
 }

@@ -17,7 +17,7 @@ enum Section { ALGA, CORAL, SCAVENGER, NONE };
 class Simulation {
 public:
 	void reinit();
-    void lecture(const std::string& nom_fichier, bool is_testing);
+    void lecture(const std::string& nom_fichier, bool is_testing, bool epsil_zero);
     void file_writing(std::string filename);
     const std::string get_size_algae();
     const std::string get_size_corals();
