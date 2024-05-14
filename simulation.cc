@@ -548,6 +548,5 @@ void Simulation::batterie_tests(size_t i, double vieil_angle){
 		if (intersec != 1){
 			corals[intersec - 2].change_dir(dir_rot_2);
 		}
-		super_maj_cor(i);
 	}
 }
