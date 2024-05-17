@@ -84,7 +84,7 @@ bool do_intersect(S2d p1, S2d q1, S2d p2, S2d q2, bool is_epsil_zero)
     int o3 = orientation(p2, q2, p1, is_epsil_zero); 
     int o4 = orientation(p2, q2, q1, is_epsil_zero); 
   
-    if (o1 != o2 and o3 != o4) return true; 
+    if (o1 and o2 and o3 and o4 and o1 != o2 and o3 != o4) return true; 
  
     if (o1 == 0 and on_segment(p1, p2, q1, is_epsil_zero)) return true; 
   

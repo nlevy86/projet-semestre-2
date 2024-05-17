@@ -49,7 +49,7 @@ public:
 	const int get_cor_dev();
 	bool maj_corail(double angle, int j);
 	bool not_superpo_active(double vieil_angle);
-	void change_dir(int dir);
+	void change_dir();
 	const bool in_bord(S2d fin);
 private:
 	unsigned int id;

@@ -457,7 +457,6 @@ void Simulation::set_nb_sim(){
 }
 
 void Simulation::maj(bool creation_algue){
-	++nb_sim;
 	// cout << nb_sim << " ";
 	file_writing("mise à jour préc.txt");
 	for (size_t i(0); i < algae.size(); ++i){
@@ -469,20 +468,38 @@ void Simulation::maj(bool creation_algue){
 	if (creation_algue){
 		apparition_aleatoire_algue();
 	}
-	
+	vector <double> vieil_angle{};
 	for (size_t i(0); i < corals.size(); ++i){
-		double vieil_angle(0);
 		if (corals[i].get_cor_size() > 1){
-			vieil_angle = ecart_angulaire(corals[i].get_cor_element
+			vieil_angle.emplace_back(ecart_angulaire(corals[i].get_cor_element
 			(corals[i].get_cor_size() - 1), corals[i].get_cor_element
-			(corals[i].get_cor_size() - 2));
+			(corals[i].get_cor_size() - 2)));
+		} else {
+			vieil_angle.emplace_back(0);
 		}
-		
 		if (corals[i].get_cor_status() == Status_cor::ALIVE){
 			super_maj_cor(i);
-			batterie_tests(i, vieil_angle);
 		}
-		
+	}
+	bool test(true);
+	vector <bool> coll{};
+	for (size_t i(0); i < corals.size(); ++i){
+		if (corals[i].get_cor_status() == Status_cor::ALIVE){
+			batterie_tests(i, vieil_angle[i], test, coll);
+		} else {
+			coll.emplace_back(false);
+		}
+	}
+	if (test){
+		++nb_sim;
+	}else{
+		reinit();
+		lecture("mise à jour préc.txt", false, true);
+		for (size_t i(0); i < corals.size(); ++i){
+			if (coll[i]){
+				corals[i].change_dir();
+			}
+		}
 	}
 }
 
@@ -515,7 +532,7 @@ int Simulation::not_intersec_others(size_t k, S2d fin){
 	return 0;
 }
 
-void Simulation::batterie_tests(size_t i, double vieil_angle){
+void Simulation::batterie_tests(size_t i, double vieil_angle, bool& test, vector <bool>& coll){
 	S2d fin{};
 	fin.x = corals[i].get_cor_element(corals[i].get_cor_size()-1).base.x + 
 			corals[i].get_cor_element(corals[i].get_cor_size()-1).longueur * 
@@ -528,25 +545,9 @@ void Simulation::batterie_tests(size_t i, double vieil_angle){
 	int intersec(not_intersec_others(i, fin));
 	if (not(corals[i].not_superpo_active(vieil_angle) and 
 	    corals[i].segment_not_coll_him(false) and intersec == 0 and corals[i].in_bord(fin))){
-		--nb_sim;
-		int dir_rot(corals[i].get_cor_dir());
-		int dir_rot_2;
-				
-		if (intersec != 1){
-			dir_rot_2 = corals[intersec-2].get_cor_dir();
-		}
-		
-		// Resets simulation
-		reinit();
-		
-		// Reload from previous cycle
-		lecture("mise à jour préc.txt", false, true);
-		
-		// Change dir rot from previous
-		corals[i].change_dir(dir_rot);
-		
-		if (intersec != 1){
-			corals[intersec - 2].change_dir(dir_rot_2);
-		}
+		test = false;
+		coll.emplace_back(true);
+	}else {
+		coll.emplace_back(false);
 	}
 }

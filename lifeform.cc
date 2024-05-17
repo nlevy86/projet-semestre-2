@@ -261,6 +261,7 @@ bool Corail::maj_corail(double angle, int j){
 						cor.back().base.y + cor.back().longueur*sin(cor.back().angle)};
 				Segment seg{pos, cor.back().angle, l_repro - l_seg_interne};
 				cor.emplace_back(seg);
+				++nb_segment;
 				status_develo = Status_dev::REPRO;
 			} else {
 				cor.back().longueur = l_repro/2;
@@ -276,7 +277,6 @@ bool Corail::maj_corail(double angle, int j){
 bool Corail::not_superpo_active(double vieil_angle){
 	if (cor.size() > 1){
 		double new_angle(ecart_angulaire(cor.back(), cor[cor.size() - 2]));
-		
 		if (vieil_angle < 0 and vieil_angle > -delta_rot and new_angle > 0 and 
 		    new_angle < delta_rot){
 			return false;
@@ -288,8 +288,8 @@ bool Corail::not_superpo_active(double vieil_angle){
 	return true;
 }
 
-void Corail::change_dir(int dir){
-	if (dir == 0){
+void Corail::change_dir(){
+	if (dir_rot_corail == Dir_rot_cor::TRIGO){
 		dir_rot_corail = Dir_rot_cor::INVTRIGO;
 	} else {
 		dir_rot_corail = Dir_rot_cor::TRIGO;

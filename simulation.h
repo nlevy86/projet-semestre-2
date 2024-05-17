@@ -50,7 +50,7 @@ private:
     void apparition_aleatoire_algue();
     void super_maj_cor(size_t i);
     int not_intersec_others(size_t k, S2d fin);
-    void batterie_tests(size_t i,double vieil_angle);
+    void batterie_tests(size_t i,double vieil_angle, bool& test, std::vector <bool>& coll);
     
 };
 
