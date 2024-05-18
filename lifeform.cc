@@ -303,3 +303,23 @@ const bool Corail::in_bord(S2d fin){
 	}
 	return true;
 }
+
+bool Sca::maj_sca()
+{
+	++age_lifeform;
+	int int_max_life_sca(max_life_sca);
+	return (age_lifeform == int_max_life_sca);
+}
+
+void Sca::set_status (int k){
+	if (k==0) {
+		status_scaven = Status_sca::FREE;
+	}
+	else if (k==1) {
+		status_scaven =Status_sca::EATING;
+	}
+}
+
+void Sca::set_id_cible ( int id){
+	cor_id_cible = id;
+}

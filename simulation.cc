@@ -501,6 +501,16 @@ void Simulation::maj(bool creation_algue){
 			}
 		}
 	}
+	for (size_t i(0); i < scavengers.size(); ++i){
+		if (scavengers[i].maj_sca()){
+			destruction_sca(i);
+		}
+	}
+	
+	vector<Sca*> free_scavengers{};
+	free_sca_creation(free_scavengers);
+	vector <Corail> dead_free_corals {};
+	dead_free_corals_creation(dead_free_corals);
 }
 
 int Simulation::not_intersec_others(size_t k, S2d fin){
@@ -550,4 +560,89 @@ void Simulation::batterie_tests(size_t i, double vieil_angle, bool& test, vector
 	}else {
 		coll.emplace_back(false);
 	}
+}
+
+void Simulation::free_sca_creation (vector<Sca*> &free_scavengers) {
+	for (size_t i(0); i<scavengers.size(); ++i){
+		if (scavengers[i].get_status() == 0) {
+			free_scavengers.push_back(&(scavengers[i]));
+		}
+	}
+}
+
+
+void Simulation::dead_free_corals_creation (vector <Corail> &dead_free_corals){
+	for(size_t i(0); i<corals.size() ; ++i){
+		if (corals[i].get_cor_status() == 0) {
+			bool coral_not_taken = true;
+			
+			for(size_t j(0); j<scavengers.size() ; ++j){
+				if(scavengers[j].get_status() == 0){
+					continue;
+				}
+				
+				if(corals[i].get_cor_dir() == scavengers[j].get_id_cible()){
+						coral_not_taken = false;
+				}
+			}
+			
+			if(coral_not_taken) {
+				dead_free_corals.push_back(corals[i]);
+			}
+		}
+	}
+}
+void Simulation::destruction_sca(int j){
+	if (j!= -1){
+		Sca scavenger(scavengers[j]);
+		scavengers[j] = scavengers.back();
+		scavengers.back() = scavenger;
+		scavengers.pop_back();
+	}
+}
+
+void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, vector<Sca*> &free_scavengers){
+	for( size_t j(0); j<free_scavengers.size(); ++j){
+		double dist = 10000000;
+		size_t index = 0;
+		for(size_t i(0); i< dead_free_corals.size(); ++i){
+			double dist_coral_sca = 0;
+			dist_coral_sca = calc_dist_coral_sca(i, j, dead_free_corals, free_scavengers);
+			if (dist_coral_sca < dist) {
+				dist = dist_coral_sca;
+				index = i;
+			}
+		}
+		
+		free_scavengers[j]->set_status(1);
+		free_scavengers[j]->set_id_cible(dead_free_corals[index].get_cor_id());
+		
+		Corail cor_inter = dead_free_corals[index];
+		dead_free_corals[index] = dead_free_corals.back();
+		dead_free_corals.back() = cor_inter;
+		dead_free_corals.pop_back();
+		
+		if(dead_free_corals.size() == 0){
+			break;
+		}
+	}
+}
+
+double Simulation::calc_dist_coral_sca(size_t i, size_t j, vector<Corail> dead_free_corals, vector<Sca*> free_scavengers){
+	size_t cor_size = corals[i].get_cor_size();
+	
+	double end_of_cor_x = dead_free_corals[i].get_cor_element(cor_size -1).base.x + 
+	                      dead_free_corals[i].get_cor_element(cor_size -1).longueur * 
+		                  cos(dead_free_corals[i].get_cor_element(cor_size -1).angle);
+		      
+	double end_of_cor_y = dead_free_corals[i].get_cor_element(cor_size -1).base.y + 
+	                      dead_free_corals[i].get_cor_element(cor_size -1).longueur * 
+		                  sin(dead_free_corals[i].get_cor_element(cor_size -1).angle);
+		                  
+	double sca_x = free_scavengers[j]->get_lifeform_pos().x;
+	double sca_y = free_scavengers[j]->get_lifeform_pos().y;
+	
+	double dist = sqrt(pow(end_of_cor_x - sca_x, 2) + pow(end_of_cor_y - sca_y, 2));
+	
+	return dist;
 }

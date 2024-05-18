@@ -70,6 +70,9 @@ public:
 	const int get_id_cible();
 	const double get_ray();
 	const int get_status();
+	bool maj_sca();
+	void set_status (int k);
+	void set_id_cible ( int id);
 private:
 	double ray_sca;
 	Status_sca status_scaven;
