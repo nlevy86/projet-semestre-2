@@ -511,6 +511,7 @@ void Simulation::maj(bool creation_algue){
 	free_sca_creation(free_scavengers);
 	vector <Corail> dead_free_corals {};
 	dead_free_corals_creation(dead_free_corals);
+	sca_target_attribution(dead_free_corals, free_scavengers);
 }
 
 int Simulation::not_intersec_others(size_t k, S2d fin){
@@ -601,7 +602,7 @@ void Simulation::destruction_sca(int j){
 	}
 }
 
-void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, vector<Sca*> &free_scavengers){
+void Simulation::sca_target_attribution( vector<Corail> &dead_free_corals, const vector<Sca*> &free_scavengers){
 	for( size_t j(0); j<free_scavengers.size(); ++j){
 		double dist = 10000000;
 		size_t index = 0;

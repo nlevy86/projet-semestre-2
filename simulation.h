@@ -53,7 +53,7 @@ private:
     void batterie_tests(size_t i,double vieil_angle, bool& test, std::vector <bool>& coll);
     void free_sca_creation (std::vector<Sca*> &free_scavengers);
     void dead_free_corals_creation (std::vector <Corail> &dead_free_corals);
-    void sca_target_attribution(std::vector <Corail> &dead_free_corals, std::vector <Sca*> &free_scavengers);
+    void sca_target_attribution(std::vector <Corail> &dead_free_corals, const std::vector <Sca*> &free_scavengers);
     double calc_dist_coral_sca(size_t i, size_t j, std::vector<Corail> dead_free_corals, std::vector<Sca*> free_scavengers);
     void destruction_sca(int j);
     
