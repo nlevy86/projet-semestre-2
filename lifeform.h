@@ -76,7 +76,7 @@ public:
 	void set_id_cible ( int id);
 	void move_scavenger_on_target(Corail cor_cible);
 	void set_ray(unsigned l);
-	void move_scavenger_to_target(Corail targeted_coral);
+	void move_scavenger_to_target(Corail targeted_coral, double dist);
 private:
 	double ray_sca;
 	Status_sca status_scaven;

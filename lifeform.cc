@@ -306,7 +306,8 @@ const bool Corail::in_bord(S2d fin){
 
 void Corail::change_last_seg_length(){
 	cor.back().longueur -= delta_l;
-	if (cor.back().longueur == 0){
+	
+	if (cor.size() > 0 and cor.back().longueur == 0){
 		cor.pop_back();
 		nb_segment -=1;
 	}
@@ -333,6 +334,7 @@ void Sca::set_id_cible ( int id){
 }
 
 void Sca::move_scavenger_on_target(Corail cor_cible){
+	cout << "scavenger is moving ON the target" << endl;
 	size_t cor_size = cor_cible.get_cor_size();
 	double angle = cor_cible.get_cor_element(cor_size - 1).angle;
 	pos_lifeform.x -= delta_l*cos(angle);
@@ -340,19 +342,25 @@ void Sca::move_scavenger_on_target(Corail cor_cible){
 }
 
 void Sca::set_ray(unsigned l){
-	ray_sca += l;
+	ray_sca = l;
 }
 
 
-void Sca::move_scavenger_to_target(Corail targeted_coral){
+void Sca::move_scavenger_to_target(Corail targeted_coral, double dist){
+	cout << "scavenger is moving to target" << endl;
 	size_t cor_size = targeted_coral.get_cor_size();
+
 	
-	double x_cor = targeted_coral.get_cor_element(cor_size -1).base.x;
-	double y_cor = targeted_coral.get_cor_element(cor_size -1).base.y;
+	double x_cor = targeted_coral.get_cor_element(cor_size -1).base.x + targeted_coral.get_cor_element(cor_size -1).longueur*cos(targeted_coral.get_cor_element(cor_size -1).angle);
+	double y_cor = targeted_coral.get_cor_element(cor_size -1).base.y + targeted_coral.get_cor_element(cor_size -1).longueur*sin(targeted_coral.get_cor_element(cor_size -1).angle);
 	double angle = atan2(y_cor - pos_lifeform.y, x_cor - pos_lifeform.x);
 	
-	pos_lifeform.x += delta_l*cos(angle);
-	pos_lifeform.y += delta_l*sin(angle);
+	double l = dist;
+	l = (l >= 0) ? l : 0;
+	l = (l <= delta_l) ? l : delta_l;
+	
+	pos_lifeform.x += l*cos(angle);
+	pos_lifeform.y += l*sin(angle);
 	
 	
 }
