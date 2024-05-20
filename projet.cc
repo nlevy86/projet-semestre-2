@@ -19,7 +19,7 @@ int main(int argc, char *argv[]){
 	}
 	
 	sim.reinit();
-	sim.lecture(std::string{argv[1]}, true, false);
+	sim.lecture(std::string{argv[1]}, true, false, true);
 	
 	auto app = Gtk::Application::create();
 	return app-> make_window_and_run<Gui>(1, argv, sim);

@@ -13,8 +13,8 @@ class Lifeform{
 	
 public:
 	Lifeform(S2d _pos_lifeform, int _age_lifeform);
-	const bool lifeform_in();
-	const bool positive_age();
+	const bool lifeform_in(bool output);
+	const bool positive_age(bool output);
 	const S2d get_lifeform_pos();
 	const int get_lifeform_age();
 protected:
@@ -35,11 +35,11 @@ public:
 		   Status_cor _status_corail, Dir_rot_cor _dir_rot_corail, 
 		   Status_dev _status_develo, int _nb_segment);
 		   
-	const bool corail_in();
-	const bool segment_length_in();
-	const bool segment_angle_in();
-	const bool segment_not_superpo(bool is_epsil_zero);
-	const bool segment_not_coll_him(bool is_epsil_zero);
+	const bool corail_in(bool output);
+	const bool segment_length_in(bool output);
+	const bool segment_angle_in(bool output);
+	const bool segment_not_superpo(bool is_epsil_zero, bool output);
+	const bool segment_not_coll_him(bool is_epsil_zero, bool output);
 	const void add_segment(double angle, double length);
 	const Segment get_cor_element(int i);
 	const size_t get_cor_size();
@@ -67,7 +67,7 @@ public:
 	Sca(S2d _pos_lifeform, int _age_lifeform, double _ray_sca,
 		Status_sca _status_scaven, int _cor_id_cible = -1 );
 
-	const bool ray_in();
+	const bool ray_in(bool output);
 	const int get_id_cible();
 	const double get_ray();
 	const int get_status();
