@@ -607,27 +607,32 @@ void Simulation::destruction_sca(int j){
 
 void Simulation::sca_target_attribution( vector<Corail> &dead_free_corals, const vector<Sca*> &free_scavengers){
 	for( size_t j(0); j<free_scavengers.size(); ++j){
+		cout << "start of j loop #" << j << endl;
 		double dist = 10000000;
 		size_t index = 0;
-		for(size_t i(0); i< dead_free_corals.size(); ++i){
-			double dist_coral_sca = 0;
-			dist_coral_sca = calc_dist_coral_sca(i, j, dead_free_corals, free_scavengers);
-			if (dist_coral_sca < dist) {
-				dist = dist_coral_sca;
-				index = i;
+		cout << "end of j loop #" << j << endl;
+		if (dead_free_corals.size() > 0){
+			for(size_t i(0); i< dead_free_corals.size(); ++i){
+				cout << "i loop#" << i << endl;
+				double dist_coral_sca = 0;
+				dist_coral_sca = calc_dist_coral_sca(i, j, dead_free_corals, free_scavengers);
+				if (dist_coral_sca < dist) {
+					dist = dist_coral_sca;
+					index = i;
+				}
 			}
-		}
 		
-		free_scavengers[j]->set_status(1);
-		free_scavengers[j]->set_id_cible(dead_free_corals[index].get_cor_id());
+			free_scavengers[j]->set_status(1);
+			free_scavengers[j]->set_id_cible(dead_free_corals[index].get_cor_id());
 		
-		Corail cor_inter = dead_free_corals[index];
-		dead_free_corals[index] = dead_free_corals.back();
-		dead_free_corals.back() = cor_inter;
-		dead_free_corals.pop_back();
+			Corail cor_inter = dead_free_corals[index];
+			dead_free_corals[index] = dead_free_corals.back();
+			dead_free_corals.back() = cor_inter;
+			dead_free_corals.pop_back();
 		
-		if(dead_free_corals.size() == 0){
-			break;
+			if(dead_free_corals.size() == 0){
+				break;
+			}
 		}
 	}
 }
