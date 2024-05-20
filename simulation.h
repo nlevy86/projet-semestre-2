@@ -56,6 +56,10 @@ private:
     void sca_target_attribution(std::vector <Corail> &dead_free_corals, const std::vector <Sca*> &free_scavengers);
     double calc_dist_coral_sca(size_t i, size_t j, std::vector<Corail> dead_free_corals, std::vector<Sca*> free_scavengers);
     void destruction_sca(int j);
+    void super_maj_sca();
+    Corail find_target(Sca scavenger);
+    double dist_calc(Sca scavenger, Corail coral);
+    void suppr_cor(Sca scavenger);
     
 };
 

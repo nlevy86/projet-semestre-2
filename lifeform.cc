@@ -304,6 +304,14 @@ const bool Corail::in_bord(S2d fin){
 	return true;
 }
 
+void Corail::change_last_seg_length(){
+	cor.back().longueur -= delta_l;
+	if (cor.back().longueur == 0){
+		cor.pop_back();
+		nb_segment -=1;
+	}
+}
+
 bool Sca::maj_sca()
 {
 	++age_lifeform;
@@ -322,4 +330,29 @@ void Sca::set_status (int k){
 
 void Sca::set_id_cible ( int id){
 	cor_id_cible = id;
+}
+
+void Sca::move_scavenger_on_target(Corail cor_cible){
+	size_t cor_size = cor_cible.get_cor_size();
+	double angle = cor_cible.get_cor_element(cor_size - 1).angle;
+	pos_lifeform.x -= delta_l*cos(angle);
+	pos_lifeform.y -= delta_l*sin(angle);
+}
+
+void Sca::set_ray(unsigned l){
+	ray_sca += l;
+}
+
+
+void Sca::move_scavenger_to_target(Corail targeted_coral){
+	size_t cor_size = targeted_coral.get_cor_size();
+	
+	double x_cor = targeted_coral.get_cor_element(cor_size -1).base.x;
+	double y_cor = targeted_coral.get_cor_element(cor_size -1).base.y;
+	double angle = atan2(y_cor - pos_lifeform.y, x_cor - pos_lifeform.x);
+	
+	pos_lifeform.x += delta_l*cos(angle);
+	pos_lifeform.y += delta_l*sin(angle);
+	
+	
 }

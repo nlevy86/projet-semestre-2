@@ -182,6 +182,8 @@ void Simulation::new_sca(double x, double y, int age,double rayon,
 
 }
 
+
+
 void Simulation::new_segment(double age, double length, Corail *current, bool& test)
 {
     current->add_segment(age, length);
@@ -512,6 +514,7 @@ void Simulation::maj(bool creation_algue){
 	vector <Corail> dead_free_corals {};
 	dead_free_corals_creation(dead_free_corals);
 	sca_target_attribution(dead_free_corals, free_scavengers);
+	super_maj_sca();
 }
 
 int Simulation::not_intersec_others(size_t k, S2d fin){
@@ -647,3 +650,74 @@ double Simulation::calc_dist_coral_sca(size_t i, size_t j, vector<Corail> dead_f
 	
 	return dist;
 }
+
+void Simulation::super_maj_sca(){
+	for(size_t i(0); i<scavengers.size() ; ++i){
+		
+		if (scavengers[i].get_status() == 1){
+			
+			if (scavengers[i].get_ray() < r_sca_repro) {
+				
+				if (dist_calc(scavengers[i], find_target(scavengers[i])) == 0){
+					
+					scavengers[i].move_scavenger_on_target(find_target(scavengers[i])); // 1: bouge le sca de delta l sur le dernier seg
+					find_target(scavengers[i]).change_last_seg_length(); //2: mettre a jour la longueur du corail 
+					if (find_target(scavengers[i]).get_cor_element(0).longueur == 0){
+						
+						scavengers[i].set_id_cible(-1);                                //3) verifier la longueur du premier segment et repasse le scavenger à free
+						scavengers[i].set_status(0);
+						suppr_cor(scavengers[i]);
+						
+					}
+					scavengers[i].set_ray(delta_r_sca);
+				} else{
+					scavengers[i].move_scavenger_to_target(find_target(scavengers[i]));
+				}
+			} else {
+				scavengers[i].set_ray(r_sca);
+				size_t cor_size = find_target(scavengers[i]).get_cor_size();
+				double new_x = scavengers[i].get_lifeform_pos().x + delta_l*cos(find_target(scavengers[i]).get_cor_element(cor_size - 1).angle);
+				double new_y = scavengers[i].get_lifeform_pos().y + delta_l*sin(find_target(scavengers[i]).get_cor_element(cor_size - 1).angle);
+				S2d pos{new_x, new_y};
+				Sca scavenger(pos, 1, r_sca, Status_sca::FREE, -1);
+				scavengers.emplace_back(scavenger);
+			}
+		}
+	}
+}
+
+Corail Simulation::find_target(Sca scavenger) {
+	int target_id = scavenger.get_id_cible();
+	for (size_t i(0); i < corals.size(); ++i) {
+		if (corals[i].get_cor_id() == unsigned(target_id) ){
+			return corals[i];
+		}
+	}
+}
+
+double Simulation::dist_calc(Sca scavenger, Corail coral){
+	size_t cor_size = coral.get_cor_size();
+	double end_of_cor_x = coral.get_cor_element(cor_size - 1).base.x + coral.get_cor_element(cor_size - 1).longueur * cos(coral.get_cor_element(cor_size - 1).angle);
+	double end_of_cor_y = coral.get_cor_element(cor_size - 1).base.y + coral.get_cor_element(cor_size - 1).longueur * sin(coral.get_cor_element(cor_size - 1).angle);
+	double sca_x = scavenger.get_lifeform_pos().x;
+	double sca_y = scavenger.get_lifeform_pos().y;
+	double dist = sqrt(pow(end_of_cor_x - sca_x, 2) + pow(end_of_cor_y - sca_y, 2));
+	
+	return dist;	
+}
+
+
+void Simulation::suppr_cor(Sca scavenger){
+	size_t index = 0;
+	for (size_t i(0); i < corals.size(); ++i){
+		if (corals[i].get_cor_id() == find_target(scavenger).get_cor_id()){
+			index = i;
+		}
+	}
+	Corail cor_inter = corals[index];
+	corals[index] = corals.back();
+	corals.back() = cor_inter;
+	corals.pop_back();
+}
+
+

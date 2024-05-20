@@ -51,6 +51,7 @@ public:
 	bool not_superpo_active(double vieil_angle);
 	void change_dir();
 	const bool in_bord(S2d fin);
+	void change_last_seg_length();
 private:
 	unsigned int id;
 	Status_cor status_corail;
@@ -73,6 +74,9 @@ public:
 	bool maj_sca();
 	void set_status (int k);
 	void set_id_cible ( int id);
+	void move_scavenger_on_target(Corail cor_cible);
+	void set_ray(unsigned l);
+	void move_scavenger_to_target(Corail targeted_coral);
 private:
 	double ray_sca;
 	Status_sca status_scaven;
