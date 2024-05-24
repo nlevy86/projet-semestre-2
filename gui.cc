@@ -94,13 +94,11 @@ Gui::Gui(Simulation sim):
 }
 
 
-void Gui::on_button_clicked_exit()
-{
+void Gui::on_button_clicked_exit(){
 	hide();
 }
 
-void Gui::on_button_clicked_open()
-{
+void Gui::on_button_clicked_open(){
 	is_save = false;
 	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
 	                                         Gtk::FileChooser::Action::OPEN);
@@ -136,8 +134,7 @@ void Gui::on_button_clicked_open()
 	dialog->show();
 }
 
-void Gui::on_button_clicked_save()
-{
+void Gui::on_button_clicked_save(){
 	is_save = true;
 	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
 	                                         Gtk::FileChooser::Action::SAVE);
@@ -173,8 +170,7 @@ void Gui::on_button_clicked_save()
 	dialog->show();
 }
 
-bool Gui::start_simulation()
-{
+bool Gui::start_simulation(){
 	if (simulation_running){
 		button_start.set_label("stop");
 		simulation.maj(apparition_algue);
@@ -191,8 +187,7 @@ bool Gui::start_simulation()
 	}
 }
 
-void Gui::on_button_clicked_step()
-{
+void Gui::on_button_clicked_step(){
 	simulation.maj(apparition_algue);
 	label_nb_maj.set_text(to_string(simulation.get_nb_sim()));
 	label_nb_algue.set_text(simulation.get_size_algae());
@@ -201,8 +196,7 @@ void Gui::on_button_clicked_step()
 	draw.refresh();
 }
 
-bool Gui::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
-{
+bool Gui::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state){
 	switch(gdk_keyval_to_unicode(keyval))
 	{
 		case '1':
@@ -216,26 +210,21 @@ bool Gui::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
 }
 
 
-void Gui::activate_naissance_algue()
-{
+void Gui::activate_naissance_algue(){
 	apparition_algue = naissance_algue.get_active();
 }
 
 
-void Gui::on_button_clicked_start()
-{
+void Gui::on_button_clicked_start(){
 	if (not simulation_running){
 		simulation_running = true;
 		sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
 		                                        &Gui::start_simulation));
 		auto conn = Glib::signal_timeout().connect(my_slot,25);
-	} else {
-		simulation_running = false;
-	}
+	} else simulation_running = false;
 }
 
-void Gui::on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialog)
-{
+void Gui::on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialog){
 	//Handle the response:
 	switch (response_id)
 	{
@@ -269,24 +258,20 @@ void Gui::on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialo
 }
 
 Drawing::Drawing(Simulation* simptr):
-	sim(simptr)
-{
+	sim(simptr) {
 	set_content_width(500);
 	set_content_height(500);
 	set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 
-void Drawing::setFrame(Frame f)
-{
-	if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
-	{
+void Drawing::setFrame(Frame f){
+	if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0)){
 		f.asp = f.width/f.height;
 		frame = f;
 	}
 } 
 
-void Drawing::adjustFrame(int width, int height)
-{
+void Drawing::adjustFrame(int width, int height){
 	frame.width  = width;
 	frame.height = height;
 
@@ -295,8 +280,7 @@ void Drawing::adjustFrame(int width, int height)
 	
     // use the reference framing as a guide for preventing distortion
     double new_aspect_ratio((double)width/height);
-    if( new_aspect_ratio > default_frame.asp)
-    { // keep yMax and yMin. Adjust xMax and xMin
+    if( new_aspect_ratio > default_frame.asp){ // keep yMax and yMin. Adjust xMax and xMin
 	    frame.yMax = default_frame.yMax ;
 	    frame.yMin = default_frame.yMin ;	
 	  
@@ -304,10 +288,9 @@ void Drawing::adjustFrame(int width, int height)
 	    double mid((default_frame.xMax + default_frame.xMin)/2);
         // the new frame is centered on the mid-point along X
 	    frame.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
-	    frame.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;		  	  
-    }
-    else
-    { // keep xMax and xMin. Adjust yMax and yMin
+	    frame.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;	
+	    	  	  
+    }else{ // keep xMax and xMin. Adjust yMax and yMin
 	    frame.xMax = default_frame.xMax ;
 	    frame.xMin = default_frame.xMin ;
 	  	  
@@ -322,8 +305,7 @@ void Drawing::adjustFrame(int width, int height)
 
 
 
-void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
-{
+void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height){
 	graphic_set_context(cr);
 		// adjust the frame (cadrage) to prevent distortion 
 	adjustFrame(width, height);
@@ -336,14 +318,12 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
 	
 }
 
-void Drawing::refresh()
-{
+void Drawing::refresh(){
 	queue_draw();
 }
 
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
-								    Frame frame)
-{
+								    Frame frame){
 	// déplace l'origine au centre de la fenêtre
 	cr->translate(frame.width/2, frame.height/2);
   

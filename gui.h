@@ -28,8 +28,7 @@ struct Frame // Model Framing and window parameters
 	int width;   // window width
 };
 
-class Drawing : public Gtk::DrawingArea
-{
+class Drawing : public Gtk::DrawingArea{
 public:
 	Drawing(Simulation* simptr);
 	

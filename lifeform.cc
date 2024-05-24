@@ -30,11 +30,9 @@ Sca::Sca(S2d _pos_lifeform, int _age_lifeform, double _ray_sca,
 			 status_scaven(_status_scaven), cor_id_cible(_cor_id_cible) {}
 
 
-const bool Lifeform::lifeform_in(bool output)
-{
+const bool Lifeform::lifeform_in(bool output){
 	if (pos_lifeform.x < 1 or pos_lifeform.x > dmax-1 or  pos_lifeform.y < 1 or
-		pos_lifeform.y > dmax-1)
-	{
+		pos_lifeform.y > dmax-1){
 		if (output){
 			cout << message::lifeform_center_outside(pos_lifeform.x, pos_lifeform.y);
 		}
@@ -43,72 +41,51 @@ const bool Lifeform::lifeform_in(bool output)
 	return true;
 }
 
-const bool Lifeform::positive_age(bool output)
-{
-	if (age_lifeform > 0)
-	{
-		return true;
-	}
-	if (output){
-		cout << message::lifeform_age(age_lifeform);
-	}
+const bool Lifeform::positive_age(bool output){
+	if (age_lifeform > 0) return true;
+	if (output) cout << message::lifeform_age(age_lifeform);
+	
 	return false;
 }
 
-const S2d Lifeform::get_lifeform_pos()
-{
+const S2d Lifeform::get_lifeform_pos(){
 	return pos_lifeform;
 }		
 
-const int Lifeform::get_lifeform_age()
-{
+const int Lifeform::get_lifeform_age(){
 	return age_lifeform;
 }
 
-const bool Corail::corail_in(bool output)
-{
-	for (int i(0); i<= nb_segment-1; ++i)
-	{
+const bool Corail::corail_in(bool output){
+	for (int i(0); i<= nb_segment-1; ++i){
 		S2d fin;
 		fin.x = cor[i].base.x + cor[i].longueur * cos(cor[i].angle);
 		fin.y = cor[i].base.y + cor[i].longueur * sin(cor[i].angle);
 		
 		if ((fin.x < 0 or fin.x > dmax or 
-			fin.y < 0 or fin.y > dmax))
-		{
-			if (output){
-				cout << message::lifeform_computed_outside(id, fin.x, fin.y);
-			}
+			fin.y < 0 or fin.y > dmax)){
+			if (output) cout << message::lifeform_computed_outside(id, fin.x, fin.y);
+			
 			return false;
 		}
 	}
 	return true;
 }
 
-const bool Corail::segment_length_in(bool output)
-{
-	for (int i(0); i<= nb_segment-1; ++i)
-	{
-		if (cor[i].longueur >= l_repro or cor[i].longueur < l_repro - l_seg_interne)
-		{
-			if (output){
-				cout<< message::segment_length_outside(id, cor[i].longueur);
-			}
+const bool Corail::segment_length_in(bool output){
+	for (int i(0); i<= nb_segment-1; ++i){
+		if (cor[i].longueur >= l_repro or cor[i].longueur < l_repro - l_seg_interne){
+			if (output) cout<< message::segment_length_outside(id, cor[i].longueur);
 			return false;
 		}
 	}
 	return true;
 }
 
-const bool Corail::segment_angle_in(bool output)
-{
-	for (int i(0); i<= nb_segment-1; ++i)
-	{
-		if (cor[i].angle > M_PI or cor[i].angle < -M_PI)
-		{
-			if (output){
-				cout<< message::segment_angle_outside(id, cor[i].angle);
-			}
+const bool Corail::segment_angle_in(bool output){
+	for (int i(0); i<= nb_segment-1; ++i){
+		if (cor[i].angle > M_PI or cor[i].angle < -M_PI){
+			if (output) cout<< message::segment_angle_outside(id, cor[i].angle);
 			return false;
 		}
 	}
@@ -118,25 +95,17 @@ const bool Corail::segment_angle_in(bool output)
 const bool Corail::segment_not_superpo(bool is_epsil_zero, bool output){
 	for (int i(0); i<= nb_segment-1; ++i){
 		if (superpo_commun(cor[i],cor[i+1], is_epsil_zero)){
-			if (output){
-				cout<<message::segment_superposition(id, i, i+1);
-			}
+			if (output) cout<<message::segment_superposition(id, i, i+1);
 			return false;
 		}
 	}
 	return true;
 }
 
-const bool Corail::segment_not_coll_him(bool is_epsil_zero, bool output)
-{
-	if (nb_segment < 2)
-	{
-		return true;
-	}
-	for (int i(0); i<= nb_segment-3; ++i)
-	{
-		for (int j(i+2); j<= nb_segment-1; ++j)
-		{
+const bool Corail::segment_not_coll_him(bool is_epsil_zero, bool output){
+	if (nb_segment < 2) return true;
+	for (int i(0); i<= nb_segment-3; ++i){
+		for (int j(i+2); j<= nb_segment-1; ++j){
 			S2d fin_i;
 			fin_i.x = cor[i].base.x + cor[i].longueur * cos(cor[i].angle);
 			fin_i.y = cor[i].base.y + cor[i].longueur * sin(cor[i].angle);
@@ -144,11 +113,8 @@ const bool Corail::segment_not_coll_him(bool is_epsil_zero, bool output)
 			fin_j.x = cor[j].base.x + cor[j].longueur * cos(cor[j].angle);
 			fin_j.y = cor[j].base.y + cor[j].longueur * sin(cor[j].angle);
 			
-			if (do_intersect(cor[i].base, fin_i, cor[j].base, fin_j, is_epsil_zero))
-			{
-				if (output){
-					cout<<message::segment_collision(id, i, id, j);
-				}
+			if (do_intersect(cor[i].base, fin_i, cor[j].base, fin_j, is_epsil_zero)){
+				if (output) cout<<message::segment_collision(id, i, id, j);
 				return false;
 			}
 		}
@@ -156,13 +122,11 @@ const bool Corail::segment_not_coll_him(bool is_epsil_zero, bool output)
 	return true;
 }
 
-const void Corail::add_segment(double angle, double length) 
-{
+const void Corail::add_segment(double angle, double length) {
 	double x = pos_lifeform.x;
 	double y = pos_lifeform.y;
 
-	if(!cor.empty()) 
-	{
+	if(!cor.empty()){
 		Segment tail = cor.back();
 
 		x = tail.base.x + tail.longueur*cos(tail.angle);
@@ -175,28 +139,23 @@ const void Corail::add_segment(double angle, double length)
 	cor.emplace_back(base, angle, length);
 }
 
-const Segment Corail::get_cor_element(int i)
-{
+const Segment Corail::get_cor_element(int i){
 	return cor[i];
 }
 
-const size_t Corail::get_cor_size()
-{
+const size_t Corail::get_cor_size(){
 	return cor.size();
 }
 
-const unsigned int Corail::get_cor_id()
-{
+const unsigned int Corail::get_cor_id(){
 	return id;
 }
 
-const int Corail::get_cor_status()
-{
+const int Corail::get_cor_status(){
 	return (status_corail == Status_cor::DEAD) ? 0 : 1;
 }
 
-const int Corail::get_cor_dir()
-{
+const int Corail::get_cor_dir(){
 	return (dir_rot_corail == Dir_rot_cor::TRIGO) ? 0 : 1;
 }
 
@@ -206,32 +165,26 @@ const int Corail::get_cor_dev(){
 
 
 const bool Sca::ray_in(bool output){
-	if (ray_sca>=r_sca and ray_sca<r_sca_repro){
-		return true;
-	}
-	if (output){
-		cout << message::scavenger_radius_outside(ray_sca);
-	}
+	if (ray_sca>=r_sca and ray_sca<r_sca_repro) return true;
+	
+	if (output) cout << message::scavenger_radius_outside(ray_sca);
+	
 	return false;
 }
 
-const int Sca::get_id_cible()
-{
+const int Sca::get_id_cible(){
 	return cor_id_cible;
 }
 
-const double Sca::get_ray()
-{
+const double Sca::get_ray(){
 	return ray_sca;
 }
 
-const int Sca::get_status()
-{
+const int Sca::get_status(){
 	return (status_scaven == Status_sca::FREE) ? 0 : 1;
 }
 
-bool Algue::maj_algue()
-{
+bool Algue::maj_algue(){
 	++age_lifeform;
 	int int_max_life_alg(max_life_alg);
 	return (age_lifeform == int_max_life_alg);
@@ -241,14 +194,10 @@ bool Corail::maj_corail(double angle, int j){
 	++age_lifeform;
 	
 	int int_max_life_cor(max_life_cor);
-	if (age_lifeform == int_max_life_cor){
-		status_corail = Status_cor::DEAD;
-	}
+	if (age_lifeform == int_max_life_cor) status_corail = Status_cor::DEAD;
 	
 	// Increase length if there's an alga
-	if (j != -1){
-		cor.back().longueur += delta_l;
-	}
+	if (j != -1) cor.back().longueur += delta_l;
 	
 	double double_l_repro(l_repro);
 	bool is_repro(false);
@@ -261,15 +210,11 @@ bool Corail::maj_corail(double angle, int j){
 			if (dir_rot_corail == Dir_rot_cor::TRIGO){
 				cor.back().angle += angle;
 				
-				if (cor.back().angle > M_PI){
-					cor.back().angle -= 2*M_PI;
-				}
+				if (cor.back().angle > M_PI) cor.back().angle -= 2*M_PI;
 			} else {
 				cor.back().angle -= angle;
 				
-				if (cor.back().angle < -M_PI){
-					cor.back().angle += 2*M_PI;
-				}
+				if (cor.back().angle < -M_PI) cor.back().angle += 2*M_PI;
 			}
 		} else {
 			if (status_develo == Status_dev::EXTEND){
@@ -305,11 +250,8 @@ bool Corail::not_superpo_active(double vieil_angle){
 }
 
 void Corail::change_dir(){
-	if (dir_rot_corail == Dir_rot_cor::TRIGO){
-		dir_rot_corail = Dir_rot_cor::INVTRIGO;
-	} else {
-		dir_rot_corail = Dir_rot_cor::TRIGO;
-	}
+	if (dir_rot_corail == Dir_rot_cor::TRIGO) dir_rot_corail = Dir_rot_cor::INVTRIGO;
+	else  dir_rot_corail = Dir_rot_cor::TRIGO;
 }
  
 const bool Corail::in_bord(S2d fin){
@@ -329,20 +271,16 @@ void Corail::change_last_seg_length(){
 	}
 }
 
-bool Sca::maj_sca()
-{
+bool Sca::maj_sca(){
 	++age_lifeform;
 	int int_max_life_sca(max_life_sca);
 	return (age_lifeform == int_max_life_sca);
 }
 
 void Sca::set_status (int k){
-	if (k==0) {
-		status_scaven = Status_sca::FREE;
-	}
-	else if (k==1) {
-		status_scaven =Status_sca::EATING;
-	}
+	if (k==0) status_scaven = Status_sca::FREE;
+	
+	else if (k==1) status_scaven =Status_sca::EATING;
 }
 
 void Sca::set_id_cible ( int id){
@@ -363,10 +301,10 @@ void Sca::set_ray(unsigned l){
 
 void Sca::move_scavenger_to_target(Corail targeted_coral, double dist){
 	size_t cor_size = targeted_coral.get_cor_size();
-
+	Segment s = targeted_coral.get_cor_element(cor_size -1);
 	
-	double x_cor = targeted_coral.get_cor_element(cor_size -1).base.x + targeted_coral.get_cor_element(cor_size -1).longueur*cos(targeted_coral.get_cor_element(cor_size -1).angle);
-	double y_cor = targeted_coral.get_cor_element(cor_size -1).base.y + targeted_coral.get_cor_element(cor_size -1).longueur*sin(targeted_coral.get_cor_element(cor_size -1).angle);
+	double x_cor = s.base.x + s.longueur*cos(s.angle);
+	double y_cor = s.base.y + s.longueur*sin(s.angle);
 	double angle = atan2(y_cor - pos_lifeform.y, x_cor - pos_lifeform.x);
 	
 	double l = dist;

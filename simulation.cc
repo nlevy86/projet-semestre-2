@@ -22,12 +22,9 @@ void Simulation::reinit(){
 
 //Premiere fonction/methode de plus de 40 lignes
 void Simulation::lecture(const string& nom_fichier, bool is_testing, bool epsil_zero, 
-						 bool output)
-{
+						 bool output){
 	bool test = true;
-	if (is_testing){
-		e.seed(1);
-	}
+	if (is_testing) e.seed(1);
     ifstream fichier(nom_fichier.c_str());
     Section section = Section::NONE;
     string buffer{};
@@ -55,8 +52,7 @@ void Simulation::lecture(const string& nom_fichier, bool is_testing, bool epsil_
             }
             break;
         case CORAL:
-            if(nb > 0)
-            {
+            if(nb > 0){
                 double x(0), y(0);
                 int age(0), status_cor(0),dir_rot(0), status_dev(0),nb_seg(0);
                 unsigned int id = 0;
@@ -64,8 +60,7 @@ void Simulation::lecture(const string& nom_fichier, bool is_testing, bool epsil_
 				      >> nb_seg;
                 Corail *current = new_coral(x, y, age, id, status_cor, 
 											dir_rot, status_dev, nb_seg, test, output);               
-                for(int i(0); i < nb_seg; ++i) 
-                {
+                for(int i(0); i < nb_seg; ++i){
                     getline(fichier, buffer);                    
                     if (buffer[0] == '#' or buffer.empty()) continue;
 					istringstream ligne_seg(buffer);
@@ -86,8 +81,7 @@ void Simulation::lecture(const string& nom_fichier, bool is_testing, bool epsil_
             }
             break;
         case SCAVENGER:
-            if(nb > 0)
-            {
+            if(nb > 0){
                 double x(0), y(0), rayon(0);
                 int age(0), status_sca(0), target_id(-1);
                 ligne >> x >> y >> age >> rayon >> status_sca;
@@ -101,48 +95,41 @@ void Simulation::lecture(const string& nom_fichier, bool is_testing, bool epsil_
         }
     }
     fichier.close();
-    if (not test and is_testing){
-    	reinit();
-    }
+    if (not test and is_testing) reinit();
 }
 
-void Simulation::file_writing(string filename)
-{
+void Simulation::file_writing(string filename){
 	ofstream file;
 	file.open(filename, ofstream::trunc);
 	file.imbue(locale::classic());
     file << "# Etat courant de la simulation :" << endl << algae.size() << endl;
 
-    for (size_t i(0); i < algae.size(); ++i) 
-    {
+    for (size_t i(0); i < algae.size(); ++i){
         file << "\t" << algae[i].get_lifeform_pos().x << " " 
             << algae[i].get_lifeform_pos().y << " " 
             << algae[i].get_lifeform_age() << endl;
     }
     file << endl << corals.size() << endl;
     
-    for (size_t i(0); i < corals.size(); ++i) 
-    {
+    for (size_t i(0); i < corals.size(); ++i){
         file << "\t" << corals[i].get_lifeform_pos().x << " " 
         << corals[i].get_lifeform_pos().y << " " << corals[i].get_lifeform_age() 
         << " " << corals[i].get_cor_id() << " " << corals[i].get_cor_status() 
         << " " << corals[i].get_cor_dir() << " " << corals[i].get_cor_dev() 
         << " " << corals[i].get_cor_size() << endl;
-        for (size_t j(0); j < corals[i].get_cor_size(); ++j) 
-        {
+        for (size_t j(0); j < corals[i].get_cor_size(); ++j){
             file << "\t\t" << corals[i].get_cor_element(j).angle << " "
             << corals[i].get_cor_element(j).longueur << endl;
         }
     }
     file << endl << scavengers.size() <<endl;
 
-    for(size_t i(0); i < scavengers.size(); ++i)
-    {
+    for(size_t i(0); i < scavengers.size(); ++i){
         file << "\t" << scavengers[i].get_lifeform_pos().x << " " 
         <<scavengers[i].get_lifeform_pos().y << " " <<scavengers[i].get_lifeform_age()
         << " " << scavengers[i].get_ray() << " " << scavengers[i].get_status() 
         << " " ;
-        if (scavengers[i].get_id_cible() != -1) {file << scavengers[i].get_id_cible();}
+        if (scavengers[i].get_id_cible() != -1) file << scavengers[i].get_id_cible();
         file << endl;
     }
     file.close();
@@ -150,8 +137,7 @@ void Simulation::file_writing(string filename)
 
 
 
-void Simulation::new_alga(double x, double y, int age, bool& test, bool output)
-{
+void Simulation::new_alga(double x, double y, int age, bool& test, bool output){
     S2d pos{};
     pos.x = x;
     pos.y = y;
@@ -162,8 +148,7 @@ void Simulation::new_alga(double x, double y, int age, bool& test, bool output)
 }
 
 void Simulation::new_sca(double x, double y, int age,double rayon,
-	                     int status_sca, int target_id, bool& test, bool output)
-{
+	                     int status_sca, int target_id, bool& test, bool output){
     S2d pos{};
     pos.x = x;
     pos.y = y;
@@ -172,22 +157,19 @@ void Simulation::new_sca(double x, double y, int age,double rayon,
     test = test and scavengers.back().positive_age(output);
     test = test and scavengers.back().ray_in(output);
 
-    if(scavengers.back().get_id_cible() >= 0)
-    {
+    if(scavengers.back().get_id_cible() >= 0){
         unsigned int pos_target_id(scavengers.back().get_id_cible()); //implicit cast
         if(!id_match(pos_target_id, test)){
             cout << message::lifeform_invalid_id(pos_target_id);
             test = false;
         }
     }
-
 }
 
 
 
 void Simulation::new_segment(double age, double length, Corail *current, bool& test, 
-							 bool output)
-{
+							 bool output){
     current->add_segment(age, length);
     S2d fin_c{};
 	size_t cor_size(current->get_cor_size());
@@ -199,10 +181,8 @@ void Simulation::new_segment(double age, double length, Corail *current, bool& t
 		      current->get_cor_element(cor_size -1).longueur * 
 		      sin(current->get_cor_element(cor_size -1).angle);
 
-    for(size_t i(0); i < corals.size() - 1; ++i)
-    { 
-       for(size_t j(0); j < corals[i].get_cor_size(); ++j)
-       { 
+    for(size_t i(0); i < corals.size() - 1; ++i){ 
+       for(size_t j(0); j < corals[i].get_cor_size(); ++j){ 
 			S2d fin_j{};
 			fin_j.x = corals[i].get_cor_element(j).base.x + 
 					  corals[i].get_cor_element(j).longueur * 
@@ -213,12 +193,11 @@ void Simulation::new_segment(double age, double length, Corail *current, bool& t
 					  sin(corals[i].get_cor_element(j).angle);
 					
             if(do_intersect(current->get_cor_element(cor_size - 1).base, 
-			   fin_c, corals[i].get_cor_element(j).base, fin_j, false))
-			   {
+			   fin_c, corals[i].get_cor_element(j).base, fin_j, false)){
 				if (output){
 					cout << message::segment_collision(current->get_cor_id(), 
-					                               (cor_size - 1), 
-					                               corals[i].get_cor_id(), j);
+					                                   (cor_size - 1), 
+					                                    corals[i].get_cor_id(), j);
 				}
                 test = false;
             }
@@ -228,8 +207,7 @@ void Simulation::new_segment(double age, double length, Corail *current, bool& t
 
 Corail* Simulation::new_coral(double x, double y, int age, unsigned int id, 
 				              int status_cor, int dir_rot, int status_dev, int nb_seg, 
-				              bool& test, bool output)
-{
+				              bool& test, bool output){
     S2d pos{};
     pos.x = x;
     pos.y = y;
@@ -241,8 +219,7 @@ Corail* Simulation::new_coral(double x, double y, int age, unsigned int id,
 	test = test and corals.back().lifeform_in(output);
 	test = test and corals.back().positive_age(output);
 
-	if(id_match(corals.back().get_cor_id(), test))
-	{
+	if(id_match(corals.back().get_cor_id(), test)){
         cout << message::lifeform_duplicated_id(corals.back().get_cor_id());
         test = false;
     }
@@ -250,14 +227,9 @@ Corail* Simulation::new_coral(double x, double y, int age, unsigned int id,
 }
 
 
-bool Simulation::id_match(unsigned int tested_id, bool& test)
-{
-    for(size_t i(0); i < corals.size() - 1; ++i)
-    {
-        if(corals[i].get_cor_id() == tested_id)
-        {
-            return true;
-        }
+bool Simulation::id_match(unsigned int tested_id, bool& test){
+    for(size_t i(0); i < corals.size() - 1; ++i){
+        if(corals[i].get_cor_id() == tested_id) return true;
     }
     return false;
 }
@@ -266,6 +238,7 @@ bool Simulation::id_match(unsigned int tested_id, bool& test)
 const string Simulation::get_size_algae(){
 	return to_string(algae.size());
 }
+
 const string Simulation::get_size_corals(){
 	return to_string(corals.size());
 }
@@ -326,13 +299,10 @@ const int Simulation::algue_proche(size_t i){
 					new_angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
 						        (corals[i].get_cor_size()-1).angle;
 				} else {
-					new_angle = 2*M_PI + atan2(vect_y, vect_x) - 
-								corals[i].get_cor_element
+					new_angle = 2*M_PI+atan2(vect_y, vect_x) -corals[i].get_cor_element
 								(corals[i].get_cor_size()-1).angle;
 				}
-				if (new_angle > 0 and new_angle < angle){
-					angle = new_angle; index = j;
-				}
+				if (new_angle > 0 and new_angle < angle){angle = new_angle; index = j;}
 			} else {
 				if ((vect_y >= 0 and corals[i].get_cor_element
 				    (corals[i].get_cor_size()-1).angle > 0) or 
@@ -345,9 +315,7 @@ const int Simulation::algue_proche(size_t i){
 								(corals[i].get_cor_size()-1).angle - 
 								atan2(vect_y, vect_x);
 				}
-				if (new_angle > 0 and new_angle< angle){
-					angle = new_angle; index = j;
-				}
+				if (new_angle > 0 and new_angle< angle){angle = new_angle; index = j;}
 			}
 		}
 	}
@@ -374,31 +342,27 @@ const double Simulation::calcul_angle(size_t i, int j){
 			if (vect_y >= 0 or (vect_y <= 0 and corals[i].get_cor_element
 				(corals[i].get_cor_size()-1).angle < 0)){
 				angle = atan2(vect_y, vect_x) - corals[i].get_cor_element
-				(corals[i].get_cor_size()-1).angle;
-			} else {
+				        (corals[i].get_cor_size()-1).angle;
+			} else{
 				angle = 2*M_PI + atan2(vect_y, vect_x) - 
-							corals[i].get_cor_element
-							(corals[i].get_cor_size()-1).angle;
+						corals[i].get_cor_element
+						(corals[i].get_cor_size()-1).angle;
 			}
 		} else {
 			if ((vect_y >= 0 and corals[i].get_cor_element
 				(corals[i].get_cor_size()-1).angle > 0) or 
 				(vect_y <= 0)){
 				angle = corals[i].get_cor_element
-						(corals[i].get_cor_size()-1).angle -
-						atan2(vect_y, vect_x);
+						(corals[i].get_cor_size()-1).angle - atan2(vect_y, vect_x);
 			} else {
 				angle = 2*M_PI + corals[i].get_cor_element
-						(corals[i].get_cor_size()-1).angle - 
-						atan2(vect_y, vect_x);
+						(corals[i].get_cor_size()-1).angle - atan2(vect_y, vect_x);
 			}
 		}
 	} else {
 		angle = delta_rot;
 	}
-	if (angle < 0){
-		angle = delta_rot;
-	}
+	if (angle < 0)angle = delta_rot;
 	return angle;	
 }
 
@@ -465,54 +429,37 @@ void Simulation::set_nb_sim(){
 void Simulation::maj(bool creation_algue){
 	file_writing("mise à jour préc.txt");
 	for (size_t i(0); i < algae.size(); ++i){
-		if (algae[i].maj_algue()){
-			destruction_algue(i);
-		}
+		if (algae[i].maj_algue()) destruction_algue(i);
 	}
 	
-	if (creation_algue){
-		apparition_aleatoire_algue();
-	}
+	if (creation_algue) apparition_aleatoire_algue();
 	vector <double> vieil_angle{};
 	for (size_t i(0); i < corals.size(); ++i){
 		if (corals[i].get_cor_size() > 1){
 			vieil_angle.emplace_back(ecart_angulaire(corals[i].get_cor_element
 			(corals[i].get_cor_size() - 1), corals[i].get_cor_element
 			(corals[i].get_cor_size() - 2)));
-		} else {
-			vieil_angle.emplace_back(0);
-		}
-		if (corals[i].get_cor_status() == Status_cor::ALIVE){
-			super_maj_cor(i);
-		}
+		} else vieil_angle.emplace_back(0);
+		if (corals[i].get_cor_status() == Status_cor::ALIVE) super_maj_cor(i);
 	}
 	bool test(true);
 	vector <bool> coll{};
 	for (size_t i(0); i < corals.size(); ++i){
 		if (corals[i].get_cor_status() == Status_cor::ALIVE){
 			batterie_tests(i, vieil_angle[i], test, coll);
-		} else {
-			coll.emplace_back(false);
-		}
+		} else coll.emplace_back(false);
 	}
-	if (test){
-		++nb_sim;
-	}else{
+	if (test) ++nb_sim;
+	else{
 		reinit();
 		lecture("mise à jour préc.txt", false, true, false);
 		for (size_t i(0); i < corals.size(); ++i){
-			if (coll[i]){
-				corals[i].change_dir();
-			}
+			if (coll[i]) corals[i].change_dir();
 		}
 	}
-	
 	for (size_t i(0); i < scavengers.size(); ++i){
-		if (scavengers[i].maj_sca()){
-			destruction_sca(i);
-		}
+		if (scavengers[i].maj_sca()) destruction_sca(i);
 	}
-	
 	vector<Sca*> free_scavengers{};
 	free_sca_creation(free_scavengers);
 	vector <Corail> dead_free_corals {};
@@ -558,13 +505,11 @@ void Simulation::batterie_tests(size_t i, double vieil_angle, bool& test,
 			sin(corals[i].get_cor_element(corals[i].get_cor_size()-1).angle);
 
 	if (not(corals[i].not_superpo_active(vieil_angle) and 
-	    corals[i].segment_not_coll_him(false, false) and not_intersec_others(i, fin) and 
-	    corals[i].in_bord(fin))){
+	    corals[i].segment_not_coll_him(false, false) and not_intersec_others(i, fin) 
+	    and corals[i].in_bord(fin))){
 		test = false;
 		coll.emplace_back(true);
-	}else {
-		coll.emplace_back(false);
-	}
+	}else coll.emplace_back(false);
 }
 
 void Simulation::free_sca_creation (vector<Sca*> &free_scavengers) {
@@ -582,18 +527,14 @@ void Simulation::dead_free_corals_creation (vector <Corail> &dead_free_corals){
 			bool coral_not_taken = true;
 			
 			for(size_t j(0); j<scavengers.size() ; ++j){
-				if(scavengers[j].get_status() == 0){
-					continue;
-				}
+				if(scavengers[j].get_status() == 0) continue;
 				
 				if(((int) corals[i].get_cor_id()) == scavengers[j].get_id_cible()){
-						coral_not_taken = false;
+					coral_not_taken = false;
 				}
 			}
 			
-			if(coral_not_taken) {
-				dead_free_corals.push_back(corals[i]);
-			}
+			if(coral_not_taken) dead_free_corals.push_back(corals[i]);
 		}
 	}
 }
@@ -606,8 +547,53 @@ void Simulation::destruction_sca(int j){
 	}
 }
 
-void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, vector<Sca*> &free_scavengers){
 
+void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, 
+                                        vector<Sca*> &free_scavengers){
+	
+	int n_cor = dead_free_corals.size();
+	int n_sca = free_scavengers.size();
+
+	vector<vector<double>> distances(n_cor);
+	
+	for(int i = 0; i < n_cor; ++i) {
+			distances[i] = vector<double>(n_cor);
+		for(int j = 0; j < n_sca; ++j) {
+			distances[i][j] = calc_dist_coral_sca(i, j, dead_free_corals, free_scavengers);
+		}
+	}
+	
+	double threshold = 0.;
+	int detected_sca = 0;
+	int detected_cor = 0;
+
+	vector<bool> coral_assigned(n_cor, false);
+	while(detected_cor < n_cor and detected_sca < n_sca){
+		threshold += sqrt(2);
+
+		for(int i = 0; i < n_cor; ++i) {
+			if(coral_assigned[i]) continue;
+			
+			for(int j = 0; j < n_sca; ++j) {
+				if(free_scavengers[j]->get_status() == 1) continue;
+				if(distances[i][j] < threshold) continue;
+				if(distances[i][j] > threshold + sqrt(2))continue;
+				
+				free_scavengers[j]->set_status(1);
+				free_scavengers[j]->set_id_cible(dead_free_corals[i].get_cor_id());
+				detected_cor++;
+				detected_sca++;
+				coral_assigned[i] = true;
+
+			}
+		}
+	}
+	
+}
+/*
+void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, 
+                                        vector<Sca*> &free_scavengers){
+	
 	for(size_t i = 0; i < dead_free_corals.size(); i++) {
 		double dist_min = 10000000000;
 		int closest_sca = -1;
@@ -621,9 +607,7 @@ void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, vector
 			}
 		}
 		
-		if(closest_sca < 0) {
-			continue;
-		}
+		if(closest_sca < 0) continue;
 		
 		free_scavengers[closest_sca]->set_status(1);
 		free_scavengers[closest_sca]->set_id_cible(dead_free_corals[i].get_cor_id());
@@ -633,11 +617,12 @@ void Simulation::sca_target_attribution(vector<Corail> &dead_free_corals, vector
 		free_scavengers.back() = temp;
 		free_scavengers.pop_back();
 	}
+}*/
 
-}
 
-
-double Simulation::calc_dist_coral_sca(size_t i, size_t j, vector<Corail> dead_free_corals, vector<Sca*> free_scavengers){
+double Simulation::calc_dist_coral_sca(size_t i, size_t j, 
+                                       vector<Corail> dead_free_corals, 
+                                       vector<Sca*> free_scavengers){
 	size_t cor_size = dead_free_corals[i].get_cor_size();
 	
 	double end_of_cor_x = dead_free_corals[i].get_cor_element(cor_size -1).base.x + 
@@ -667,8 +652,9 @@ void Simulation::super_maj_sca(){
 				
 				if (dist < 0.1){
 					
-					scavengers[i].move_scavenger_on_target(find_target(scavengers[i])); // 1: bouge le sca de delta l sur le dernier seg
-					find_target(scavengers[i]).change_last_seg_length(); //2: mettrZe a jour la longueur du corail 
+					scavengers[i].move_scavenger_on_target(find_target(scavengers[i]));  // 1: bouge le sca de delta l sur le dernier seg
+					find_target(scavengers[i]).change_last_seg_length();                 //2: mettre a jour la longueur du corail 
+					                                                                    
 					if (find_target(scavengers[i]).get_cor_element(0).longueur < 0.1){
 						
 						suppr_cor(scavengers[i]);
@@ -678,14 +664,15 @@ void Simulation::super_maj_sca(){
 					
 					scavengers[i].set_ray(scavengers[i].get_ray()+delta_r_sca);
 				} else{
-					scavengers[i].move_scavenger_to_target(find_target(scavengers[i]), dist);
+					scavengers[i].move_scavenger_to_target(find_target(scavengers[i]), 
+					                                       dist);
 				}
 			} else {
 				scavengers[i].set_ray(r_sca);
 				size_t cor_size = find_target(scavengers[i]).get_cor_size();
-				
-				double new_x = scavengers[i].get_lifeform_pos().x + delta_l*cos(find_target(scavengers[i]).get_cor_element(cor_size - 1).angle);
-				double new_y = scavengers[i].get_lifeform_pos().y + delta_l*sin(find_target(scavengers[i]).get_cor_element(cor_size - 1).angle);
+				Segment s = find_target(scavengers[i]).get_cor_element(cor_size - 1);
+				double new_x = scavengers[i].get_lifeform_pos().x+delta_l*cos(s.angle);
+				double new_y = scavengers[i].get_lifeform_pos().y+delta_l*sin(s.angle);
 				
 				S2d pos{new_x, new_y};
 				Sca scavenger(pos, 1, r_sca, Status_sca::FREE, -1);
@@ -698,16 +685,15 @@ void Simulation::super_maj_sca(){
 Corail& Simulation::find_target(Sca scavenger) {
 	int target_id = scavenger.get_id_cible();
 	for (size_t i(0); i < corals.size(); ++i) {
-		if (corals[i].get_cor_id() == unsigned(target_id) ){
-			return corals[i];
-		}
+		if (corals[i].get_cor_id() == unsigned(target_id) ) return corals[i];
 	}
 }
 
 double Simulation::dist_calc(Sca scavenger, Corail coral){
 	size_t cor_size = coral.get_cor_size();
-	double end_of_cor_x = coral.get_cor_element(cor_size - 1).base.x + coral.get_cor_element(cor_size - 1).longueur * cos(coral.get_cor_element(cor_size - 1).angle);
-	double end_of_cor_y = coral.get_cor_element(cor_size - 1).base.y + coral.get_cor_element(cor_size - 1).longueur * sin(coral.get_cor_element(cor_size - 1).angle);
+	Segment s = coral.get_cor_element(cor_size - 1);
+	double end_of_cor_x = s.base.x + s.longueur * cos(s.angle);
+	double end_of_cor_y = s.base.y + s.longueur * sin(s.angle);
 	double sca_x = scavenger.get_lifeform_pos().x;
 	double sca_y = scavenger.get_lifeform_pos().y;
 	double dist = sqrt(pow(end_of_cor_x - sca_x, 2) + pow(end_of_cor_y - sca_y, 2));
@@ -720,9 +706,7 @@ double Simulation::dist_calc(Sca scavenger, Corail coral){
 void Simulation::suppr_cor(Sca scavenger){
 	size_t index = 0;
 	for (size_t i(0); i < corals.size(); ++i){
-		if (corals[i].get_cor_id() == find_target(scavenger).get_cor_id()){
-			index = i;
-		}
+		if (corals[i].get_cor_id() == find_target(scavenger).get_cor_id()) index = i;
 	}
 	Corail cor_inter = corals[index];
 	corals[index] = corals.back();

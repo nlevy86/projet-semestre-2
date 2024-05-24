@@ -6,13 +6,11 @@
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
-void graphic_set_context( const Cairo::RefPtr<Cairo::Context>& cr)
-{
+void graphic_set_context( const Cairo::RefPtr<Cairo::Context>& cr){
 	ptcr = &cr;
 }
 
-void draw_frame(int width, int height)
-{
+void draw_frame(int width, int height){
 	(*ptcr)->set_line_width(1.0);
 	(*ptcr)->set_source_rgb(0.0, 0.0, 0.0);
 	if (width<height){
@@ -32,8 +30,7 @@ void draw_frame(int width, int height)
 }
 
 void draw_line(double x, double y, double l, 
-				double a, double r, double g, double b)
-{
+				double a, double r, double g, double b){
 	(*ptcr)->set_line_width(1.0);
 	(*ptcr)->set_source_rgb(r, g, b);
 	(*ptcr)->move_to(x, y);
@@ -42,8 +39,7 @@ void draw_line(double x, double y, double l,
 }
 
 void draw_arc(double x, double y, double ray, 
-			  double start, double stop, double r, double g, double b)
-{
+			  double start, double stop, double r, double g, double b){
 	(*ptcr)->set_line_width(1.0);
 	(*ptcr)->set_source_rgb(r, g, b);
 	(*ptcr)->arc(x,y,ray,start,stop);
